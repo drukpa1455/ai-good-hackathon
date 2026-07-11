@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import type { ReleaseSummary } from '../contracts';
 import type { Theme } from '../theme';
+import { BrandMark } from './BrandMark';
 import { MockDataBadge } from './MockDataBadge';
 
 type MobileTab = 'graph' | 'map' | 'evidence';
@@ -212,31 +213,5 @@ export function AppShell({
         )}
       </div>
     </div>
-  );
-}
-
-/** Small static rendering of the Fibonacci-globe brand mark. */
-function BrandMark() {
-  const dots: ReactNode[] = [];
-  const N = 34;
-  const GA = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < N; i++) {
-    const r = 14 * Math.sqrt((i + 0.5) / N);
-    const a = i * GA;
-    dots.push(
-      <circle
-        key={i}
-        cx={15 + r * Math.cos(a)}
-        cy={15 + r * Math.sin(a)}
-        r={i % 5 === 0 ? 1.4 : 0.9}
-        fill="var(--acc)"
-        opacity={0.4 + 0.6 * ((i % 7) / 7)}
-      />,
-    );
-  }
-  return (
-    <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
-      {dots}
-    </svg>
   );
 }

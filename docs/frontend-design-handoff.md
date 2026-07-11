@@ -602,19 +602,35 @@ trace, live chain of thought, or current chatbot activity.
 ## DigitalOcean Chatbot Boundary
 
 `AgentWidget.tsx` loads DigitalOcean’s generated widget script only when all
-runtime fields are present and `agent.enabled` is true. The widget owns its
-launcher, chat history, response rendering, transport, and feedback.
+runtime fields are present and `agent.enabled` is true. The widget owns the
+interactive launcher target, chat history, response rendering, transport, and
+feedback.
 
 Frontend responsibilities are limited to:
 
 - injecting the documented script and public `data-*` values once
 - reserving layout space so the launcher covers nothing
+- replacing the generated outer-frame loading placeholder with a bounded
+  branded status
+- supplying the shared Groundwork mark through the documented `data-logo`
+  attribute and sizing the visible compact provider frame to the 56px handoff
+  launcher
+- accepting ready/resize presentation messages only when both the configured
+  provider origin and the exact provider frame source match
 - displaying suggested questions beside, but outside, the widget
 - showing a non-blocking “Agent unavailable; explore the evidence graph” state
   when disabled or failed
 
+DigitalOcean's embed contract snapshots its color and logo attributes during
+initialization and exposes no runtime theme message or update API. The
+host-owned loading, unavailable, and launcher-clearance surfaces follow the app
+theme; the cross-origin chat keeps one accessible provider palette. Do not
+reinject the widget on theme changes because that duplicates provider state and
+resets the conversation.
+
 Do not build a chat transcript, message composer, streaming parser, proxy
-endpoint, or synchronized tool-trace panel.
+endpoint, or synchronized tool-trace panel. Do not read or alter the
+cross-origin iframe document, synthesize chat actions, or intercept transport.
 
 Suggested questions:
 
