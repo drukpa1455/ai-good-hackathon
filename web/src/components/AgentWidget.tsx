@@ -24,6 +24,7 @@ export function AgentWidget({ config }: { config: PublicRuntimeConfig | null }) 
     script.setAttribute('data-agent-id', agent.agent_id!);
     script.setAttribute('data-chatbot-id', agent.chatbot_id!);
     script.setAttribute('data-name', agent.name);
+    script.setAttribute('data-logo', '/static/chatbot/icons/default-agent.svg');
     script.setAttribute('data-primary-color', agent.primary_color);
     script.setAttribute('data-secondary-color', agent.secondary_color);
     script.setAttribute('data-button-background-color', agent.button_background_color);
