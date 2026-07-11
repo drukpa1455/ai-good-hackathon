@@ -30,6 +30,7 @@ from groundwork.repository import JsonReleaseRepository
 
 NOW = datetime(2026, 7, 11, 12, 0, tzinfo=UTC)
 INTEGRATION_APN = "9999999"
+UNSEEDED_INTEGRATION_APNS = ("9999998", "9999997")
 INTEGRATION_NOW = datetime(2099, 1, 1, 0, 0, tzinfo=UTC)
 
 
@@ -197,6 +198,40 @@ def _artifact_receipts(
     ]
 
 
+async def _cleanup_integration_data(database_url: str) -> None:
+    async with await psycopg.AsyncConnection.connect(database_url) as connection:
+        await connection.execute(
+            "DELETE FROM current_contexts WHERE parcel_id = %s",
+            (INTEGRATION_APN,),
+        )
+        await connection.execute(
+            "DELETE FROM context_snapshots WHERE parcel_id = %s",
+            (INTEGRATION_APN,),
+        )
+        await connection.execute(
+            "DELETE FROM refresh_state WHERE parcel_id = %s",
+            (INTEGRATION_APN,),
+        )
+        cursor = connection.cursor()
+        await cursor.executemany(
+            """
+            DELETE FROM source_artifacts
+            WHERE dataset_id = %s AND sha256 = %s AND retrieved_at = %s
+            """,
+            [
+                (
+                    artifact.dataset_id,
+                    artifact.artifact_sha256,
+                    artifact.retrieved_at,
+                )
+                for offset in range(11)
+                for artifact in _integration_artifacts(
+                    INTEGRATION_NOW + timedelta(seconds=offset)
+                )
+            ],
+        )
+
+
 def test_expired_lease_cannot_publish_even_without_a_successor() -> None:
     context = _live_fixture()
     lease = RefreshLease(
@@ -236,30 +271,7 @@ def test_real_postgres_migration_and_lease_probe() -> None:
         await apply_migrations(database_url)
         await apply_migrations(database_url)
 
-        async def cleanup() -> None:
-            async with await psycopg.AsyncConnection.connect(database_url) as connection:
-                await connection.execute(
-                    "DELETE FROM current_contexts WHERE parcel_id = %s",
-                    (INTEGRATION_APN,),
-                )
-                await connection.execute(
-                    "DELETE FROM context_snapshots WHERE parcel_id = %s",
-                    (INTEGRATION_APN,),
-                )
-                await connection.execute(
-                    "DELETE FROM refresh_state WHERE parcel_id = %s",
-                    (INTEGRATION_APN,),
-                )
-                await connection.execute(
-                    """
-                    DELETE FROM source_artifacts
-                    WHERE retrieved_at >= %s
-                      AND retrieved_at < %s
-                    """,
-                    (INTEGRATION_NOW, INTEGRATION_NOW + timedelta(minutes=1)),
-                )
-
-        await cleanup()
+        await _cleanup_integration_data(database_url)
         compiler = DataSFCompiler()
         async with await psycopg.AsyncConnection.connect(database_url) as connection:
             await connection.execute(
@@ -292,6 +304,25 @@ def test_real_postgres_migration_and_lease_probe() -> None:
             evidence = await restarted.get_evidence(f"ev-acdm-wktn-{INTEGRATION_APN}")
             assert evidence is not None
             assert evidence.parcel_ids == [INTEGRATION_APN]
+            statuses = await restarted.get_statuses([INTEGRATION_APN])
+            assert len(statuses) == 1
+            assert statuses[0].parcel_id == INTEGRATION_APN
+            assert statuses[0].context is not None
+            assert statuses[0].context.release.id == context.release.id
+            assert not statuses[0].refreshing
+            all_statuses = await restarted.get_statuses(
+                [INTEGRATION_APN, *UNSEEDED_INTEGRATION_APNS]
+            )
+            all_by_parcel = {item.parcel_id: item for item in all_statuses}
+            assert set(all_by_parcel) == {
+                INTEGRATION_APN,
+                *UNSEEDED_INTEGRATION_APNS,
+            }
+            assert len(all_statuses) == 3
+            assert all(
+                all_by_parcel[parcel_id].context is None
+                for parcel_id in UNSEEDED_INTEGRATION_APNS
+            )
         finally:
             await restarted.close()
 
@@ -301,6 +332,8 @@ def test_real_postgres_migration_and_lease_probe() -> None:
                 (INTEGRATION_APN,),
             )
             assert (await cursor.fetchone())[0] == 10
-        await cleanup()
 
-    asyncio.run(scenario())
+    try:
+        asyncio.run(scenario())
+    finally:
+        asyncio.run(_cleanup_integration_data(database_url))
