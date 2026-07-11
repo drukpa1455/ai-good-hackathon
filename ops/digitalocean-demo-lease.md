@@ -187,9 +187,9 @@ FUNCTION_WEB_SECRET="$(openssl rand -hex 32)"
    AGENT_CHATBOT_ID=<generated data-chatbot-id>
    AGENT_NAME=Groundwork SF
    AGENT_STARTING_MESSAGE=Ask about one of the three demo sites. I will inspect its evidence graph first.
-   AGENT_PRIMARY_COLOR=#afa0ff
-   AGENT_SECONDARY_COLOR=#111017
-   AGENT_BUTTON_BACKGROUND_COLOR=#afa0ff
+   AGENT_PRIMARY_COLOR=#5b4bc4
+   AGENT_SECONDARY_COLOR=#1a1822
+   AGENT_BUTTON_BACKGROUND_COLOR=#5b4bc4
    ```
 
    The browser receives no credential. The DigitalOcean widget owns streaming,

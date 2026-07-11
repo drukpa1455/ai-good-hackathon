@@ -64,6 +64,47 @@ describe('App routing and shell', () => {
     expect(screen.getByRole('navigation', { name: /sites and focus/i })).toBeInTheDocument();
   });
 
+  it('folds the desktop site rail without losing the graph', async () => {
+    const user = userEvent.setup();
+    renderAt('/sites/3956008?focus=housing');
+    await screen.findByRole('region', { name: /context graph/i });
+
+    const nav = screen.getByRole('navigation', { name: /sites and focus/i });
+    const content = document.getElementById('site-rail-content');
+    expect(content).not.toHaveAttribute('hidden');
+
+    await user.click(within(nav).getByRole('button', { name: /fold sites and focus/i }));
+    expect(content).toHaveAttribute('hidden');
+    expect(within(nav).getByRole('button', { name: /open sites and focus/i })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
+    expect(screen.getByRole('region', { name: /context graph/i })).toBeInTheDocument();
+
+    await user.click(within(nav).getByRole('button', { name: /open sites and focus/i }));
+    expect(content).not.toHaveAttribute('hidden');
+  });
+
+  it('shows four copyable agent questions in Help', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+    renderAt('/sites/3956008');
+    await waitFor(() => expect(screen.getAllByText(/300 De Haro Street/i).length).toBeGreaterThan(0));
+
+    await user.click(screen.getByRole('button', { name: 'Help' }));
+    const help = screen.getByRole('dialog', { name: 'Help' });
+    const questions = within(help).getAllByRole('button', { name: /copy suggested question/i });
+    expect(questions).toHaveLength(4);
+
+    await user.click(questions[0]);
+    await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
+    expect(within(questions[0]).getByText('Copied')).toBeInTheDocument();
+  });
+
   it('unknown site renders a useful not-found state with the three demo links', async () => {
     renderAt('/sites/0000000');
     await waitFor(() => expect(screen.getByText(/not found/i)).toBeInTheDocument());

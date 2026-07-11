@@ -7,8 +7,8 @@
     "chatbot_id": null,
     "name": "Groundwork agent",
     "starting_message": "Ask about the public-record context of a site. Every answer cites the graph.",
-    "primary_color": "#AFA0FF",
+    "primary_color": "#5B4BC4",
     "secondary_color": "#1A1822",
-    "button_background_color": "#111017"
+    "button_background_color": "#5B4BC4"
   }
 }

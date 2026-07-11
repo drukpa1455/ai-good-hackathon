@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import type { ReleaseSummary } from '../contracts';
 import { MockDataBadge } from './MockDataBadge';
 
@@ -17,8 +17,8 @@ function useTheme(): [Theme, () => void] {
   return [theme, () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))];
 }
 
-/** Full-height application shell: top bar, site rail, panes, trust strip,
- * evidence drawer overlay, reserved agent corner, mobile tab bars, and the
+/** Full-height application shell: top bar, folding site rail, full-bleed graph,
+ * corner surfaces, trust strip, drawer, agent boundary, mobile tabs, and the
  * screen-reader announcer. Pure layout — no data access. */
 export function AppShell({
   release,
@@ -26,32 +26,63 @@ export function AppShell({
   tab,
   mobileBars,
   rail,
-  left,
+  map,
+  inspector,
   graph,
   trust,
   drawer,
   agent,
+  helpQuestions,
 }: {
   release: ReleaseSummary | null;
   announce: string;
   tab: MobileTab;
   mobileBars: ReactNode;
   rail: ReactNode;
-  left: ReactNode;
+  map: ReactNode;
+  inspector: ReactNode;
   graph: ReactNode;
   trust: ReactNode;
   drawer: ReactNode;
   agent: ReactNode;
+  helpQuestions: ReactNode;
 }) {
   const [theme, toggleTheme] = useTheme();
   const [howOpen, setHowOpen] = useState(false);
+  const [railOpen, setRailOpen] = useState(true);
+  const helpRef = useRef<HTMLDivElement | null>(null);
+  const helpTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
+    if (!howOpen) return;
+    const help = helpRef.current;
+    const helpTrigger = helpTriggerRef.current;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && howOpen) setHowOpen(false);
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        setHowOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab' || !help) return;
+      const focusables = help.querySelectorAll<HTMLElement>(
+        'button, a[href], input, select, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      helpTrigger?.focus();
+    };
   }, [howOpen]);
 
   const cutoff = release ? release.source_cutoff_at.replace('T', ' ').slice(0, 16) : '';
@@ -66,36 +97,62 @@ export function AppShell({
         <div className="topbar__brand">
           <BrandMark />
           <span className="topbar__wordmark">Groundwork&#8202;SF</span>
+          <span className="topbar__divider" aria-hidden="true" />
+          <span className="topbar__subtitle">Site context graph</span>
         </div>
         <div className="topbar__meta">
-          {release && <span className="chip">{release.id}</span>}
-          {release && <span className="chip topbar__cutoff">data to {cutoff}</span>}
+          {release && (
+            <span className="chip topbar__release">
+              <span className="topbar__release-dot" aria-hidden="true" />
+              {release.id} · to {cutoff}
+            </span>
+          )}
           <MockDataBadge release={release} />
         </div>
         <div className="topbar__controls">
           <button className="btn" onClick={toggleTheme} title="Toggle light/dark theme">
             {theme === 'dark' ? 'Light' : 'Dark'}
           </button>
-          <button className="btn" onClick={() => setHowOpen(true)}>
-            How this works
+          <button
+            ref={helpTriggerRef}
+            className="btn btn--primary"
+            onClick={() => setHowOpen(true)}
+          >
+            Help
           </button>
         </div>
       </header>
 
       <div className="mobilebars">{mobileBars}</div>
 
-      <div className="body">
-        <nav className="rail" aria-label="Sites and focus">
-          {rail}
+      <div className="body" data-rail-open={railOpen}>
+        <nav className="rail" aria-label="Sites and focus" data-open={railOpen}>
+          <div id="site-rail-content" className="rail__content" hidden={!railOpen}>
+            {rail}
+          </div>
+          {!railOpen && <span className="rail__folded-label">Sites · focus</span>}
+          <button
+            className="rail__toggle"
+            type="button"
+            aria-label={railOpen ? 'Fold sites and focus' : 'Open sites and focus'}
+            aria-controls="site-rail-content"
+            aria-expanded={railOpen}
+            onClick={() => setRailOpen((open) => !open)}
+          >
+            {railOpen ? '‹' : '›'}
+          </button>
         </nav>
 
         <main className="main">
           <div className="panes" data-tab={tab}>
-            <section className="leftcol" aria-label="Map and inspector">
-              {left}
-            </section>
             <section className="graphpane" aria-label="Context graph">
               {graph}
+            </section>
+            <section className="inspectorcorner" aria-label="Entities and assertions">
+              {inspector}
+            </section>
+            <section className="mapcorner" aria-label="Parcel map">
+              {map}
             </section>
           </div>
           {trust}
@@ -105,48 +162,35 @@ export function AppShell({
         {drawer}
 
         {howOpen && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'var(--scrim)',
-              zIndex: 55,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 20,
-            }}
-            onClick={() => setHowOpen(false)}
-          >
+          <div className="help-scrim" onClick={() => setHowOpen(false)}>
             <div
+              ref={helpRef}
               role="dialog"
               aria-modal="true"
-              aria-label="How this works"
-              className="statecard__inner"
-              style={{ maxWidth: 560, width: '100%', maxHeight: '86%', overflowY: 'auto' }}
+              aria-label="Help"
+              className="help-panel"
               onClick={(e) => e.stopPropagation()}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span className="label" style={{ fontSize: 12, color: 'var(--tx)' }}>
-                  How this works
+              <div className="help-panel__head">
+                <span className="label help-panel__title">
+                  Groundwork SF · Help
                 </span>
                 <button
                   className="btn"
-                  style={{ marginLeft: 'auto', width: 36 }}
                   onClick={() => setHowOpen(false)}
-                  aria-label="Close"
+                  aria-label="Close help"
                   autoFocus
                 >
                   ×
                 </button>
               </div>
-              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.65, color: 'var(--dim)' }}>
+              <p className="help-panel__mission">
                 Groundwork SF helps community land trusts, affordable-housing organizations, and
                 neighborhood nonprofits read the official public-record context around a San
                 Francisco site. Every visible claim belongs to a source-backed context graph, and
                 uncertainty stays visible.
               </p>
-              <ol style={{ margin: 0, paddingLeft: 18, fontSize: 13, lineHeight: 1.6, color: 'var(--dim)' }}>
+              <ol className="help-panel__steps">
                 <li>The graph centers the parcel; every connected entity and fact carries evidence.</li>
                 <li>
                   Select any fact to open its evidence record — dataset, record key, observation
@@ -157,17 +201,8 @@ export function AppShell({
                   gaps as deterministic graph metrics.
                 </li>
               </ol>
-              <div
-                style={{
-                  border: '1px solid var(--brd)',
-                  borderRadius: 10,
-                  background: 'var(--srf2)',
-                  padding: 12,
-                  fontSize: 12,
-                  lineHeight: 1.6,
-                  color: 'var(--fnt)',
-                }}
-              >
+              {helpQuestions}
+              <div className="help-panel__scope">
                 This is an evidence explorer — not a marketplace, ranking product, valuation tool,
                 or recommendation engine. It makes no legal, safety, valuation, or suitability
                 conclusions. Mock mode shows normalized design fixtures, never official records.

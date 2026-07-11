@@ -48,9 +48,9 @@ class BackendSettings:
     agent_starting_message: str = (
         "Ask about one of the three demo sites. I will inspect its evidence graph first."
     )
-    agent_primary_color: str = "#afa0ff"
-    agent_secondary_color: str = "#111017"
-    agent_button_background_color: str = "#afa0ff"
+    agent_primary_color: str = "#5b4bc4"
+    agent_secondary_color: str = "#1a1822"
+    agent_button_background_color: str = "#5b4bc4"
 
     @classmethod
     def from_env(cls) -> BackendSettings:
@@ -70,9 +70,9 @@ class BackendSettings:
                 "AGENT_STARTING_MESSAGE",
                 "Ask about one of the three demo sites. I will inspect its evidence graph first.",
             ),
-            agent_primary_color=os.getenv("AGENT_PRIMARY_COLOR", "#afa0ff"),
-            agent_secondary_color=os.getenv("AGENT_SECONDARY_COLOR", "#111017"),
-            agent_button_background_color=os.getenv("AGENT_BUTTON_BACKGROUND_COLOR", "#afa0ff"),
+            agent_primary_color=os.getenv("AGENT_PRIMARY_COLOR", "#5b4bc4"),
+            agent_secondary_color=os.getenv("AGENT_SECONDARY_COLOR", "#1a1822"),
+            agent_button_background_color=os.getenv("AGENT_BUTTON_BACKGROUND_COLOR", "#5b4bc4"),
         )
 
 

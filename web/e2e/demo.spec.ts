@@ -164,11 +164,57 @@ test.describe('accessibility and viewport acceptance', () => {
     expect(box!.x + box!.width).toBeLessThanOrEqual(viewport!.width - 104);
   });
 
+  test('desktop uses the full-bleed corner shell and folding rail', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'desktop only');
+    await page.goto('/sites/3956008?focus=housing');
+
+    const rail = page.getByRole('navigation', { name: 'Sites and focus' });
+    const graph = page.getByRole('region', { name: 'Context graph' });
+    const inspector = page.getByRole('region', { name: 'Entities and assertions' });
+    const map = page.getByRole('region', { name: 'Parcel map' });
+    const [railBox, graphBox, inspectorBox, mapBox] = await Promise.all([
+      rail.boundingBox(),
+      graph.boundingBox(),
+      inspector.boundingBox(),
+      map.boundingBox(),
+    ]);
+    expect(railBox).not.toBeNull();
+    expect(graphBox).not.toBeNull();
+    expect(inspectorBox).not.toBeNull();
+    expect(mapBox).not.toBeNull();
+    expect(Math.round(railBox!.width)).toBe(264);
+    expect(graphBox!.width).toBeGreaterThan(1100);
+    expect(inspectorBox!.x + inspectorBox!.width).toBeLessThan(mapBox!.x);
+
+    await page.getByRole('button', { name: 'Fold sites and focus' }).click();
+    await expect.poll(async () => Math.round((await rail.boundingBox())?.width ?? 0)).toBe(46);
+    await expect.poll(async () => Math.round((await graph.boundingBox())?.width ?? 0)).toBeGreaterThan(1390);
+    await expect(page).toHaveURL(/focus=housing/);
+    await expect(page.getByRole('region', { name: 'Context graph' })).toBeVisible();
+  });
+
+  test('Help presents the suggested agent questions and scope', async ({ page }, testInfo) => {
+    await page.goto('/sites/3956008');
+    await page.getByRole('button', { name: 'Help' }).click();
+    const help = page.getByRole('dialog', { name: 'Help' });
+    await expect(help).toBeVisible();
+    await expect(help.getByRole('button', { name: /copy suggested question/i })).toHaveCount(4);
+    await expect(help.getByText(/not a marketplace/i)).toBeVisible();
+    if (testInfo.project.name === 'desktop') {
+      await page.screenshot({ path: path.join(SHOTS, 'desktop-help.png') });
+    }
+  });
+
   test('mobile tabs switch graph and map panes', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'mobile', 'mobile only');
     await page.goto('/sites/3956008');
     await page.getByRole('tab', { name: 'map' }).click();
     await expect(page.getByText(/centered at/)).toBeVisible();
+    const mapBox = await page.locator('.mapcard').boundingBox();
+    const entitiesBox = await page.getByRole('list', { name: 'Graph entities' }).boundingBox();
+    expect(mapBox).not.toBeNull();
+    expect(entitiesBox).not.toBeNull();
+    expect(mapBox!.y + mapBox!.height).toBeLessThan(entitiesBox!.y);
     await page.screenshot({ path: path.join(SHOTS, 'mobile-map.png') });
     await page.getByRole('tab', { name: 'graph' }).click();
     await expect(page.getByRole('region', { name: 'Context graph' })).toBeVisible();
@@ -183,7 +229,7 @@ test.describe('accessibility and viewport acceptance', () => {
     for (const locator of [
       page.getByText('Mock data').first(),
       page.getByRole('button', { name: /^(Light|Dark)$/ }),
-      page.getByRole('button', { name: 'How this works' }),
+      page.getByRole('button', { name: 'Help' }),
     ]) {
       await expect(locator).toBeVisible();
       const box = await locator.boundingBox();
