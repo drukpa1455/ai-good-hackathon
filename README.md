@@ -38,6 +38,8 @@ Run the local gates with:
 ```bash
 uv run --project backend ruff check backend
 uv run --project backend pytest
+uv run --project backend ruff check functions
+python3 -m unittest discover -s functions/tests
 npm --prefix web run lint
 npm --prefix web run typecheck
 npm --prefix web test -- --run
@@ -77,6 +79,10 @@ The fixture release is the current source of truth. A DataSF compiler,
 PostgreSQL/PostGIS/pgvector, and broader managed RAG are productization steps
 behind the stable public API and agent-tool contracts, not prerequisites for
 the first demo.
+
+The tracked [App Platform baseline](.do/app.yaml), [secure Function](functions/),
+and [approval-bounded demo lease](ops/digitalocean-demo-lease.md) are ready for
+the next deployment phase. They create no cloud resources by themselves.
 
 No paid API, cloud resource, or deployment is authorized merely by its mention here.
 

@@ -358,6 +358,13 @@ incorrect credentials, normalizes address/APN aliases, caps each scalar input,
 and returns `context_too_large` rather than truncating evidence invisibly.
 Packets are at most 64 KiB and sorted by stable IDs.
 
+The Agent-facing Function is a scalar adapter around this protected endpoint.
+It returns a `body` object whose `status` is one of `ok`, `invalid_request`,
+`not_found`, `context_too_large`, or `unavailable`; only `status: ok` carries
+the backend's exact `context_packet`, `graph_release_id`, `mock`, and
+`packet_sha256`. This lets the Agent refuse to invent an answer after a
+retrieval failure without exposing backend errors, secrets, or payload bodies.
+
 ### Agent and GraphRAG sequence
 
 ```text
@@ -646,7 +653,7 @@ revision, and every cloud write.
   3. Create/deploy one secure Function namespace/function.
   4. Create one private `glm-5.2` agent using the live model UUID.
   5. Attach the Function route using scalar `site`, `focus`, and `question`
-     fields and a string `context_packet` result.
+     fields plus scalar status/provenance and a string `context_packet` result.
   6. Pass private factual, uncertainty, citation, and refusal probes with
      `include_functions_info=true`.
   7. Make the Agent public for the approved window, restrict widget origins to

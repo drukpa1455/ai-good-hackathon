@@ -1,0 +1,38 @@
+# Initial App Platform deployment. This service deliberately starts with chat
+# disabled; widget identifiers and the Function-to-app secret are added only
+# after the approved private Agent smoke succeeds.
+#
+# `tor` is a candidate App Platform region paired with `tor1` for Functions
+# and Agent Platform. The controlled cloud ledger must verify the live common
+# region before this spec is submitted. Render any approved override outside
+# Git rather than changing this tracked baseline during a live demo.
+name: groundwork-sf-demo
+region: tor
+alerts:
+  - rule: DEPLOYMENT_FAILED
+services:
+  - name: app
+    github:
+      repo: drukpa1455/ai-good-hackathon
+      branch: main
+      deploy_on_push: false
+    dockerfile_path: ./Dockerfile
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    health_check:
+      http_path: /healthz
+      initial_delay_seconds: 5
+      period_seconds: 10
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+    envs:
+      - key: GIT_SHA
+        value: ${_self.COMMIT_HASH}
+        scope: RUN_TIME
+        type: GENERAL
+      - key: AGENT_ENABLED
+        value: "false"
+        scope: RUN_TIME
+        type: GENERAL
