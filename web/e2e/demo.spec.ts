@@ -155,12 +155,13 @@ test.describe('accessibility and viewport acceptance', () => {
     const name = testInfo.project.name === 'mobile' ? 'mobile-graph.png' : 'desktop-main.png';
     await page.screenshot({ path: path.join(SHOTS, name) });
 
-    // nothing interactive may sit behind the reserved agent corner
-    const corner = page.locator('.agentcorner');
-    if (await corner.isVisible()) {
-      const box = await corner.boundingBox();
-      expect(box).not.toBeNull();
-    }
+    // Keep controls clear of the provider widget's fixed 80px launcher plus 24px inset.
+    const viewport = page.viewportSize();
+    const diagnostics = page.getByRole('button', { name: 'Diagnostics' });
+    const box = await diagnostics.boundingBox();
+    expect(viewport).not.toBeNull();
+    expect(box).not.toBeNull();
+    expect(box!.x + box!.width).toBeLessThanOrEqual(viewport!.width - 104);
   });
 
   test('mobile tabs switch graph and map panes', async ({ page }, testInfo) => {
