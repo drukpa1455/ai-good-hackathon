@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const QUESTIONS = [
   'What changed at 300 De Haro, and what remains uncertain?',
   'Which records support the affordable-unit count at 1939 Market?',
@@ -5,47 +7,43 @@ const QUESTIONS = [
   'What do nearby 311 reports tell us—and what do they not prove?',
 ];
 
-/** Suggested questions live beside — never inside — the DigitalOcean widget.
+/** Suggested questions live in Help — never inside — the DigitalOcean widget.
  * Tapping copies the question so the user can paste it into the agent. */
 export function SuggestedQuestions({ agentEnabled }: { agentEnabled: boolean }) {
+  const [copied, setCopied] = useState<string | null>(null);
+  const copyQuestion = (question: string) => {
+    if (!navigator.clipboard) {
+      setCopied(null);
+      return;
+    }
+    void navigator.clipboard
+      .writeText(question)
+      .then(() => setCopied(question))
+      .catch(() => setCopied(null));
+  };
+
   return (
-    <div
-      style={{
-        padding: 14,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 8,
-        borderTop: '1px solid var(--brd)',
-        marginTop: 10,
-      }}
-    >
-      <span className="label">Ask the agent</span>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+    <div className="suggestedquestions">
+      <span className="label">Try asking the agent</span>
+      <div className="suggestedquestions__list">
         {QUESTIONS.map((q) => (
           <button
             key={q}
-            onClick={() => {
-              void navigator.clipboard?.writeText(q).catch(() => undefined);
-            }}
+            onClick={() => copyQuestion(q)}
             title="Copy question for the agent widget"
-            style={{
-              textAlign: 'left',
-              padding: '9px 11px',
-              borderRadius: 10,
-              border: '1px solid var(--brd)',
-              background: 'var(--srf2)',
-              color: 'var(--dim)',
-              fontSize: 12.5,
-              lineHeight: 1.45,
-            }}
+            aria-label={`Copy suggested question: ${q}`}
+            className="suggestedquestions__question"
           >
-            {q}
+            <span>{q}</span>
+            <span className="suggestedquestions__copy">{copied === q ? 'Copied' : 'Copy'}</span>
           </button>
         ))}
       </div>
-      <span style={{ fontSize: 11, color: 'var(--fnt2)', lineHeight: 1.5 }}>
+      <span className="suggestedquestions__note" aria-live="polite">
         {agentEnabled
-          ? 'Questions are suggestions for the agent widget in the corner. Tap one to copy it.'
+          ? copied
+            ? 'Question copied. Paste it into the agent widget in the corner.'
+            : 'Copy a question, then paste it into the agent widget in the corner.'
           : 'Agent unavailable; explore the evidence graph — every claim stays inspectable without chat.'}
       </span>
     </div>

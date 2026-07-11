@@ -289,26 +289,26 @@ function SiteRoute() {
             <span className="label">Focus</span>
             <FocusControl focus={focus} onFocus={setFocus} />
           </div>
-          <SuggestedQuestions agentEnabled={runtime?.agent.enabled ?? true} />
         </>
       }
-      left={
-        <>
-          <div style={{ flex: 'none', padding: '12px 12px 0' }}>
-            <ParcelMap
-              site={ctx?.site ?? null}
-              loading={loading}
-              onSelectParcel={() => ctx && selectNode(ctx.entities.find((e) => e.kind === 'parcel')?.id ?? null)}
-            />
-          </div>
-          <Inspector
-            ctx={ctx}
-            selectedEntity={selectedEntity}
-            selectedId={selectedId}
-            onSelectNode={selectNode}
-            onSelectAssertion={selectAssertion}
-          />
-        </>
+      map={
+        <ParcelMap
+          site={ctx?.site ?? null}
+          loading={loading}
+          onSelectParcel={() => ctx && selectNode(ctx.entities.find((e) => e.kind === 'parcel')?.id ?? null)}
+        />
+      }
+      inspector={
+        <Inspector
+          ctx={ctx}
+          selectedEntity={selectedEntity}
+          selectedId={selectedId}
+          onSelectNode={selectNode}
+          onSelectAssertion={selectAssertion}
+        />
+      }
+      helpQuestions={
+        <SuggestedQuestions agentEnabled={runtime?.agent.enabled ?? true} />
       }
       graph={
         <ContextGraph

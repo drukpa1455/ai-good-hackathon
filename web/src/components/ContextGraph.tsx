@@ -299,6 +299,15 @@ export function ContextGraph({
     };
   }, []);
 
+  useEffect(() => {
+    const host = hostRef.current;
+    const cy = cyRef.current;
+    if (!host || !cy || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => cy.resize());
+    observer.observe(host);
+    return () => observer.disconnect();
+  }, []);
+
   // Rebuild elements when the context changes (site, focus, mock state, theme).
   useEffect(() => {
     const cy = cyRef.current;
