@@ -1,6 +1,5 @@
-// Frozen frontend contract — verbatim from docs/frontend-design-handoff.md.
-// OpenAPI-generated types replace this file at integration time without
-// changing ContextClient or component props.
+// Frozen public types from docs/frontend-design-handoff.md plus their local
+// boundary-validation helpers. Backend changes preserve these shapes.
 
 export type ContextFocus =
   | 'overview'

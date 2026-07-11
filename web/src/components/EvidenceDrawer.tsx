@@ -138,7 +138,7 @@ export function EvidenceDrawer({
             </div>
             <div className="metacell">
               <span className="label" style={{ fontSize: 8.5 }}>
-                Artifact sha256
+                {ctx.release.mock ? 'Fixture projection sha256' : 'Artifact sha256'}
               </span>
               <button
                 style={{

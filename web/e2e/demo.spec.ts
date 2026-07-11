@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SHOTS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../tmp/frontend-handoff');
+const DATA_MODE = process.env.PLAYWRIGHT_DATA_MODE ?? 'mock';
 
 test.beforeAll(() => {
   fs.mkdirSync(SHOTS, { recursive: true });
@@ -97,6 +98,8 @@ test.describe('90-second demo flow', () => {
 });
 
 test.describe('mock states', () => {
+  test.skip(DATA_MODE !== 'mock', 'deterministic mock-client states');
+
   test('loading shows a deterministic skeleton', async ({ page }) => {
     await page.goto('/sites/3956008?mockState=loading');
     await expect(page.getByText('Compiling context…')).toBeVisible();

@@ -57,3 +57,13 @@ npm --prefix web run e2e     # also writes screenshots to tmp/frontend-handoff/
 1. Implement the four `ContextClient` routes without changing component props.
 2. Run the suites once with `VITE_DATA_MODE=mock` and once with `api`.
 3. Keep mock mode for deterministic tests and design review.
+
+For the API-mode browser suite, build the frontend with
+`VITE_DATA_MODE=api`, start the FastAPI service on port 8000, then run:
+
+```bash
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:8000 \
+PLAYWRIGHT_SKIP_WEBSERVER=1 \
+PLAYWRIGHT_DATA_MODE=api \
+npm --prefix web run e2e
+```
