@@ -47,8 +47,10 @@ npm --prefix web run e2e     # also writes screenshots to tmp/frontend-handoff/
 - The theme-aware CARTO/OSM raster endpoints live in one module:
   `src/map/tiles.ts` (`dark_all`/`light_all` plus required dual attribution;
   tiles-failed fallback keeps the parcel on a neutral canvas).
-- `AgentWidget.tsx` only injects DigitalOcean's generated widget script from
-  runtime config. No custom chat transport, transcript, composer, or proxy.
+- `AgentWidget.tsx` injects DigitalOcean's generated widget script and owns only
+  the bounded loading state, shared `data-logo`, and compact outer-frame sizing.
+  The visible provider iframe remains the launcher and owns chat rendering and
+  transport; there is no custom transcript, composer, or proxy.
 - No DataSF calls, no source-join logic, no legal/safety/valuation/suitability
   conclusions. Mock releases always render the `MOCK DATA` badge.
 

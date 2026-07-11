@@ -805,7 +805,7 @@ button {
   align-items: flex-end;
   gap: 8px;
 }
-.agentcorner__launcher {
+.agentlauncher {
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -815,10 +815,35 @@ button {
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow);
+  position: relative;
+  pointer-events: none;
+  cursor: progress;
 }
-.agentcorner__launcher[data-disabled='true'] {
-  border-color: var(--brd2);
-  opacity: 0.55;
+.agentlauncher svg {
+  display: block;
+}
+.agentlauncher::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--srf);
+  border-top-color: var(--k-development_project);
+  border-radius: 50%;
+  background: var(--bg);
+  animation: gw-spin 0.9s linear infinite;
+}
+.groundwork-agent-provider-placeholder {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+.groundwork-agent-provider-frame[data-groundwork-state='compact'] {
+  right: 12px !important;
+  bottom: 56px !important;
+  transform: scale(0.875);
+  transform-origin: right bottom;
 }
 
 /* ---------- mobile ---------- */
@@ -936,6 +961,23 @@ button {
   }
   .agentcorner > [role='note'] {
     max-width: none !important;
+  }
+  .groundwork-agent-provider-frame[data-groundwork-state='compact'] {
+    right: 9px !important;
+    bottom: 9px !important;
+    transform: scale(0.75);
+  }
+  .agentlauncher {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    z-index: 9998;
+    width: 48px;
+    height: 48px;
+  }
+  .agentlauncher svg {
+    width: 28px;
+    height: 28px;
   }
   .graphpane {
     padding-bottom: 88px; /* keep content clear of the chat launcher */
