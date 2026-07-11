@@ -213,16 +213,15 @@ export function entityGlyphDataUri(kind: EntityKind, color: string): string {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
-/** Cytoscape must not refit the SVG to each degree-sized node. These fixed
- * image boxes reproduce the handoff's 76px viewBox at .5 parcel / .4 entity
- * scale while node diameter continues to encode connections. */
+/** Keep every symbol proportional to its degree-sized node. Cytoscape scales
+ * the complete node with the camera, so a percentage avoids a second,
+ * inconsistent fixed-size relationship between the node and its glyph. */
 export function entityGlyphBackground(kind: EntityKind, color: string) {
-  const size = kind === 'parcel' ? '38px' : '30.4px';
   return {
     'background-image': entityGlyphDataUri(kind, color),
     'background-fit': 'none',
-    'background-width': size,
-    'background-height': size,
+    'background-width': '68%',
+    'background-height': '68%',
     'background-position-x': '50%',
     'background-position-y': '50%',
     'background-image-opacity': 1,

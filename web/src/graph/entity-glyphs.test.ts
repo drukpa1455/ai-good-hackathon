@@ -129,17 +129,14 @@ describe('entity glyphs', () => {
     );
   });
 
-  it('keeps prototype scale fixed while degree changes node diameter', () => {
-    expect(entityGlyphBackground('parcel', '#afa0ff')).toMatchObject({
-      'background-fit': 'none',
-      'background-width': '38px',
-      'background-height': '38px',
-    });
-    for (const kind of KINDS.filter((kind) => kind !== 'parcel')) {
+  it('keeps every glyph centered and proportional while degree changes node diameter', () => {
+    for (const kind of KINDS) {
       expect(entityGlyphBackground(kind, '#afa0ff')).toMatchObject({
         'background-fit': 'none',
-        'background-width': '30.4px',
-        'background-height': '30.4px',
+        'background-width': '68%',
+        'background-height': '68%',
+        'background-position-x': '50%',
+        'background-position-y': '50%',
       });
     }
   });
