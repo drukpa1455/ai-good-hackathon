@@ -1,12 +1,12 @@
 {
   "name": "get-site-context",
-  "description": "Call this before every site-specific answer. It returns the bounded evidence context needed to answer with source URLs and limitations.",
+  "description": "Call this before every site-specific answer. It returns the bounded evidence context needed to answer with source URLs and limitations. If the first result is not_found and the identifier uniquely matches the canonical demo-site map, call exactly one more time with its APN. Never claim a retry without a second Function result.",
   "input_schema": {
     "parameters": [
       {
         "name": "site",
         "in": "query",
-        "description": "Required parcel APN, full address, or canonical demo-site name from the conversation.",
+        "description": "Required parcel APN, full address, or canonical demo-site name from the conversation. Canonical aliases: 300 Haro or 300 De Haro = APN 3956008; 1939 Market = APN 3501006; 758 Pacific, 772 Pacific, or 758/772 Pacific = APN 0161014.",
         "required": true,
         "schema": {
           "type": "string"
@@ -37,7 +37,7 @@
     "properties": {
       "status": {
         "type": "string",
-        "description": "ok, invalid_request, not_found, context_too_large, or unavailable."
+        "description": "ok, invalid_request, not_found, context_too_large, or unavailable. Only not_found may trigger one APN retry for a unique canonical demo-site match."
       },
       "context_packet": {
         "type": "string",

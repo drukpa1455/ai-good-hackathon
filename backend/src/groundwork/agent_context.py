@@ -7,6 +7,15 @@ import re
 from .contracts import AgentContextPacket, ContextGraph, EntityObject, LiteralObject
 from .repository import ContextRepository, NotFoundError
 
+DEMO_SITE_ALIASES_BY_APN = {
+    "3956008": ("300 Haro", "300 De Haro"),
+    "3501006": ("1939 Market",),
+    "0161014": ("758 Pacific", "772 Pacific", "758/772 Pacific"),
+}
+DEMO_ADDRESS_SUFFIX_TOKENS = frozenset(
+    {"st", "street", "ave", "avenue", "san", "francisco", "ca", "94103", "94133"}
+)
+
 
 class ContextTooLargeError(ValueError):
     """The complete evidence packet exceeds the declared Function boundary."""
@@ -41,8 +50,7 @@ class FullGraphContextProvider:
         matches = {
             parcel_id
             for alias, parcel_id in self._aliases.items()
-            if normalized == alias
-            or (len(normalized) >= 5 and (normalized in alias or alias in normalized))
+            if normalized == alias or _extends_numbered_address(normalized, alias)
         }
         if len(matches) != 1:
             raise NotFoundError(f"Unknown or ambiguous site {value}")
@@ -51,18 +59,41 @@ class FullGraphContextProvider:
 
 def _site_aliases(repository: ContextRepository) -> dict[str, str]:
     aliases: dict[str, str] = {}
-    for site in repository.list_sites():
+    sites = repository.list_sites()
+    parcel_ids = {site.parcel_id for site in sites}
+    for site in sites:
         for value in (site.parcel_id, site.name, site.address):
-            alias = _normalize(value)
-            existing = aliases.get(alias)
-            if existing is not None and existing != site.parcel_id:
-                raise ValueError(f"Ambiguous site alias {value}")
-            aliases[alias] = site.parcel_id
+            _add_alias(aliases, value, site.parcel_id)
+    for parcel_id, values in DEMO_SITE_ALIASES_BY_APN.items():
+        if parcel_id in parcel_ids:
+            for value in values:
+                _add_alias(aliases, value, parcel_id)
     return aliases
+
+
+def _add_alias(aliases: dict[str, str], value: str, parcel_id: str) -> None:
+    alias = _normalize(value)
+    existing = aliases.get(alias)
+    if existing is not None and existing != parcel_id:
+        raise ValueError(f"Ambiguous site alias {value}")
+    aliases[alias] = parcel_id
 
 
 def _normalize(value: str) -> str:
     return " ".join(re.sub(r"[^a-z0-9]+", " ", value.lower()).split())
+
+
+def _extends_numbered_address(value: str, alias: str) -> bool:
+    alias_parts = alias.split()
+    value_parts = value.split()
+    suffix = value_parts[len(alias_parts) :]
+    return (
+        len(alias_parts) >= 2
+        and alias_parts[0].isdigit()
+        and value_parts[: len(alias_parts)] == alias_parts
+        and bool(suffix)
+        and all(token in DEMO_ADDRESS_SUFFIX_TOKENS for token in suffix)
+    )
 
 
 def _render_packet(context: ContextGraph, question: str) -> str:

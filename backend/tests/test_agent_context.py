@@ -43,21 +43,60 @@ def test_packet_is_deterministic_grounded_and_bounded(
     assert packet.packet_sha256 == hashlib.sha256(packet.context_packet.encode()).hexdigest()
 
 
-def test_site_can_be_resolved_by_apn_or_full_address(repository: JsonReleaseRepository) -> None:
+@pytest.mark.parametrize(
+    ("alias", "parcel_id"),
+    (
+        ("300 Haro", "3956008"),
+        ("300 De Haro", "3956008"),
+        ("1939 Market", "3501006"),
+        ("758 Pacific", "0161014"),
+        ("772 Pacific", "0161014"),
+        ("758/772 Pacific", "0161014"),
+    ),
+)
+def test_demo_site_aliases_resolve_to_the_canonical_apn(
+    repository: JsonReleaseRepository,
+    alias: str,
+    parcel_id: str,
+) -> None:
     provider = FullGraphContextProvider(repository)
-    by_apn = provider.retrieve("0161014", "hazards", "What is stale?")
-    by_address = provider.retrieve(
-        "758/772 Pacific Avenue, San Francisco",
-        "hazards",
-        "What is stale?",
-    )
+    question = "What is stale?"
+    by_apn = provider.retrieve(parcel_id, "hazards", question)
+    by_alias = provider.retrieve(alias, "hazards", question)
+    assert by_apn == by_alias
+
+
+@pytest.mark.parametrize(
+    ("address", "parcel_id"),
+    (
+        ("300 Haro St, San Francisco, CA", "3956008"),
+        ("1939 Market Street, San Francisco", "3501006"),
+        ("758/772 Pacific Avenue, San Francisco", "0161014"),
+    ),
+)
+def test_site_can_be_resolved_by_full_address_variant(
+    repository: JsonReleaseRepository,
+    address: str,
+    parcel_id: str,
+) -> None:
+    provider = FullGraphContextProvider(repository)
+    question = "What is stale?"
+    by_apn = provider.retrieve(parcel_id, "hazards", question)
+    by_address = provider.retrieve(address, "hazards", question)
     assert by_apn == by_address
 
 
-def test_unknown_site_is_rejected(repository: JsonReleaseRepository) -> None:
+@pytest.mark.parametrize(
+    "site",
+    ("a site elsewhere", "Pacific", "Market", "Haro", "300 Haro somewhere else"),
+)
+def test_unknown_or_vague_site_is_rejected(
+    repository: JsonReleaseRepository,
+    site: str,
+) -> None:
     provider = FullGraphContextProvider(repository)
     with pytest.raises(NotFoundError, match="Unknown or ambiguous"):
-        provider.retrieve("a site elsewhere", "overview", "What is here?")
+        provider.retrieve(site, "overview", "What is here?")
 
 
 def test_packet_limit_fails_instead_of_truncating(repository: JsonReleaseRepository) -> None:
