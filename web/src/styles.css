@@ -707,9 +707,11 @@ button {
     height: 46px;
     padding: 6px 12px;
   }
-  .truststrip > .label,
-  .truststrip > div {
+  .truststrip > .label {
     display: none;
+  }
+  .truststrip > div {
+    display: none !important; /* overrides the desktop inline flex layout */
   }
   .truststrip > .btn {
     width: 100%;
