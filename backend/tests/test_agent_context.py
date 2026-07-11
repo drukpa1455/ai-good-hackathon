@@ -2,8 +2,12 @@ import hashlib
 
 import pytest
 
-from groundwork.agent_context import ContextTooLargeError, FullGraphContextProvider
-from groundwork.contracts import FOCUS_VALUES
+from groundwork.agent_context import (
+    ContextTooLargeError,
+    FullGraphContextProvider,
+    build_context_packet,
+)
+from groundwork.contracts import FOCUS_VALUES, ContextGraph
 from groundwork.repository import JsonReleaseRepository, NotFoundError
 
 
@@ -30,6 +34,7 @@ def test_packet_is_deterministic_grounded_and_bounded(
 
     assert packet == repeated
     assert packet.mock is True
+    assert packet.data_status == "fixture"
     assert packet.graph_release_id == repository.release_id
     assert "DETERMINISTIC DEMO FIXTURE" in packet.context_packet
     assert "https://data.sfgov.org/" in packet.context_packet
@@ -103,3 +108,21 @@ def test_packet_limit_fails_instead_of_truncating(repository: JsonReleaseReposit
     provider = FullGraphContextProvider(repository, max_bytes=100)
     with pytest.raises(ContextTooLargeError, match="limit is 100"):
         provider.retrieve("3956008", "overview", "What is here?")
+
+
+def test_stale_packet_status_is_explicit(repository: JsonReleaseRepository) -> None:
+    payload = repository.get_context("3956008", "overview").model_dump(mode="json")
+    payload["release"].update(
+        {
+            "id": "live-stale-test",
+            "compiler_version": "datasf-test",
+            "mock": False,
+            "data_status": "stale",
+        }
+    )
+    payload["trust"]["graph_release_id"] = "live-stale-test"
+    graph = ContextGraph.model_validate(payload)
+    packet = build_context_packet(graph, "What is stale?")
+    assert packet.data_status == "stale"
+    assert packet.mock is False
+    assert "STALE LIVE DATASF SNAPSHOT" in packet.context_packet

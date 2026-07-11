@@ -36,3 +36,7 @@ services:
         value: "false"
         scope: RUN_TIME
         type: GENERAL
+      - key: LIVE_DATA_ENABLED
+        value: "false"
+        scope: RUN_TIME
+        type: GENERAL

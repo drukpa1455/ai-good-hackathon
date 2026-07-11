@@ -36,6 +36,7 @@ IsoDate = Annotated[str, AfterValidator(_iso_date)]
 IsoDateTime = Annotated[str, AfterValidator(_iso_datetime)]
 IsoTemporal = Annotated[str, AfterValidator(_iso_temporal)]
 ContextFocus = Literal["overview", "housing", "permits", "hazards", "neighborhood"]
+DataStatus = Literal["fixture", "live", "stale"]
 AssertionCategory = ContextFocus | Literal["identity"]
 EntityKind = Literal[
     "parcel",
@@ -96,6 +97,13 @@ class ReleaseSummary(StrictModel):
     source_cutoff_at: IsoDateTime
     compiler_version: Identifier
     mock: bool
+    data_status: DataStatus = "fixture"
+
+    @model_validator(mode="after")
+    def validate_data_status(self) -> ReleaseSummary:
+        if self.mock != (self.data_status == "fixture"):
+            raise ValueError("fixture status and mock flag must agree")
+        return self
 
 
 class Headline(StrictModel):
@@ -259,4 +267,21 @@ class AgentContextPacket(StrictModel):
     context_packet: str
     graph_release_id: Identifier
     mock: bool
+    data_status: DataStatus
     packet_sha256: Sha256
+
+
+class SiteDataStatus(StrictModel):
+    parcel_id: Identifier
+    status: Literal["fixture", "live", "stale", "refreshing"]
+    graph_release_id: Identifier
+    published_at: IsoDateTime | None
+    source_cutoff_at: IsoDateTime
+    last_refresh_started_at: IsoDateTime | None
+    last_refresh_completed_at: IsoDateTime | None
+    last_error_code: Identifier | None
+
+
+class DataStatusResponse(StrictModel):
+    live_data_enabled: bool
+    sites: list[SiteDataStatus]

@@ -46,6 +46,31 @@ npm --prefix web test -- --run
 npm --prefix web run e2e
 ```
 
+## Live DataSF context plane
+
+Live refresh is an opt-in backend mode. `LIVE_DATA_ENABLED=false` is the exact
+rollback: all existing routes continue to serve the verified fixture release.
+When enabled, the API reads and refreshes bounded DataSF graphs through Managed
+PostgreSQL and stores immutable source projections in a private Space.
+
+Apply the tracked PostgreSQL migration before enabling live mode:
+
+```bash
+DATABASE_URL="postgresql://..." uv run --project backend python -m groundwork.migrate
+```
+
+The runtime then requires `DATABASE_URL`, `SPACES_ENDPOINT_URL`,
+`SPACES_REGION`, `SPACES_BUCKET`, `SPACES_KEY`, and `SPACES_SECRET`.
+`DATASF_APP_TOKEN` is optional. Secrets belong in App Platform encrypted
+environment variables, never in Git. `GET /api/data-status` reports the three
+featured parcels as fixture, live, stale, or refreshing without exposing source
+payloads or credentials.
+
+Real adapter probes are opt-in. `TEST_DATABASE_URL` enables the PostgreSQL
+migration, fenced-lease, restart, evidence-readback, and retention integration
+test. The default suite uses deterministic in-memory fakes and makes no cloud
+writes.
+
 ## Candidate Public Sources
 
 San Francisco sources under consideration:

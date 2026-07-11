@@ -6,7 +6,13 @@ import pytest
 from fastapi.testclient import TestClient
 
 from groundwork.api import BackendSettings, create_app
-from groundwork.contracts import FOCUS_VALUES
+from groundwork.contracts import (
+    FOCUS_VALUES,
+    ContextGraph,
+    DataStatusResponse,
+    SiteDataStatus,
+)
+from groundwork.repository import JsonReleaseRepository, filter_by_focus
 
 
 @pytest.fixture
@@ -60,6 +66,15 @@ def test_public_context_contract(client: TestClient) -> None:
     evidence = client.get("/api/evidence/ev-6jgi-cpb4-3956008")
     assert evidence.status_code == 200
     assert evidence.json()["dataset_id"] == "6jgi-cpb4"
+
+    status = client.get("/api/data-status")
+    assert status.status_code == 200
+    assert status.json()["live_data_enabled"] is False
+    assert [site["status"] for site in status.json()["sites"]] == [
+        "fixture",
+        "fixture",
+        "fixture",
+    ]
 
 
 def test_public_errors_use_frozen_shape_and_request_id(client: TestClient) -> None:
@@ -161,3 +176,90 @@ def test_spa_fallback_serves_deep_links_and_static_assets(tmp_path: Path) -> Non
     assert client.get("/evidence/ev-6jgi-cpb4-3956008").text == "<html>demo shell</html>"
     assert client.get("/assets/app.js").text == "console.log('demo')"
     assert client.get("/api/unknown").status_code == 404
+
+
+class RecordingLiveService:
+    def __init__(self, repository: JsonReleaseRepository) -> None:
+        self.repository = repository
+        self.calls: list[tuple[str, str]] = []
+        fixture = repository.get_context("3956008", "overview")
+        payload = fixture.model_dump(mode="json")
+        payload["release"].update(
+            {
+                "id": "live-test-release",
+                "compiler_version": "datasf-test",
+                "mock": False,
+                "data_status": "live",
+            }
+        )
+        payload["trust"]["graph_release_id"] = "live-test-release"
+        self.context = ContextGraph.model_validate(payload)
+
+    async def get_context(self, parcel_id: str, focus: str) -> ContextGraph:
+        self.calls.append((parcel_id, focus))
+        return filter_by_focus(self.context, focus)
+
+    async def get_evidence(self, evidence_id: str):
+        return self.repository.get_evidence(evidence_id)
+
+    async def data_status(self, parcel_ids: list[str]) -> DataStatusResponse:
+        return DataStatusResponse(
+            live_data_enabled=True,
+            sites=[
+                SiteDataStatus(
+                    parcel_id=parcel_id,
+                    status="live",
+                    graph_release_id="live-test-release",
+                    published_at="2026-07-11T12:00:00+00:00",
+                    source_cutoff_at="2026-07-11T12:00:00+00:00",
+                    last_refresh_started_at="2026-07-11T11:59:59+00:00",
+                    last_refresh_completed_at="2026-07-11T12:00:00+00:00",
+                    last_error_code=None,
+                )
+                for parcel_id in parcel_ids
+            ],
+        )
+
+
+def test_live_scope_is_featured_public_but_exact_apn_for_authenticated_function() -> None:
+    root = Path(__file__).resolve().parents[2]
+    repository = JsonReleaseRepository.load(root / "data/releases/demo-v1")
+    live = RecordingLiveService(repository)
+    settings = BackendSettings(
+        release_dir=root / "data/releases/demo-v1",
+        static_dir=None,
+        function_token="function-secret",
+    )
+    client = TestClient(
+        create_app(settings, request_id_factory=lambda: "req-live", live_service=live)
+    )
+
+    public = client.get("/api/sites/9999999/context")
+    assert public.status_code == 404
+    assert live.calls == []
+
+    internal = client.post(
+        "/internal/agent/context",
+        headers={"Authorization": "Bearer function-secret"},
+        json={"site": "9999999", "focus": "overview", "question": "What is here?"},
+    )
+    assert internal.status_code == 200
+    assert live.calls == [("9999999", "overview")]
+    assert internal.json()["data_status"] == "live"
+    assert internal.json()["mock"] is False
+    assert "LIVE DATASF PROJECTIONS" in internal.json()["context_packet"]
+
+    status = client.get("/api/data-status").json()
+    assert status["live_data_enabled"] is True
+    assert all(site["status"] == "live" for site in status["sites"])
+
+
+def test_live_mode_fails_fast_without_database_or_spaces_configuration() -> None:
+    root = Path(__file__).resolve().parents[2]
+    settings = BackendSettings(
+        release_dir=root / "data/releases/demo-v1",
+        static_dir=None,
+        live_data_enabled=True,
+    )
+    with pytest.raises(ValueError, match="DATABASE_URL"):
+        create_app(settings)

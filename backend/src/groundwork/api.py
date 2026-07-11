@@ -7,8 +7,9 @@ import re
 import secrets
 import time
 import uuid
-from collections.abc import Callable
-from dataclasses import dataclass
+from collections.abc import AsyncIterator, Callable
+from contextlib import asynccontextmanager
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from fastapi import FastAPI, Header, HTTPException, Request
@@ -16,18 +17,32 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from .agent_context import ContextTooLargeError, FullGraphContextProvider
+from .agent_context import (
+    ContextTooLargeError,
+    SiteResolver,
+    build_context_packet,
+)
 from .contracts import (
     AgentContextPacket,
     AgentContextRequest,
     AgentRuntimeConfig,
     ApiError,
     ContextGraph,
+    DataStatusResponse,
     EvidenceRecord,
     PublicRuntimeConfig,
     SiteSummary,
 )
+from .datasf import DataSFCompiler
+from .datasf_http import HttpDataSFClient
+from .live_context import (
+    LiveContextService,
+    LiveContextUnavailableError,
+    disabled_data_status,
+)
+from .postgres import PostgresContextStore
 from .repository import InvalidFocusError, JsonReleaseRepository, NotFoundError
+from .spaces import SpacesArtifactStore
 
 RequestIdFactory = Callable[[], str]
 REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9._-]{1,80}$")
@@ -39,7 +54,15 @@ class BackendSettings:
     release_dir: Path
     static_dir: Path | None
     git_sha: str = "unknown"
-    function_token: str = ""
+    function_token: str = field(default="", repr=False)
+    live_data_enabled: bool = False
+    database_url: str = field(default="", repr=False)
+    datasf_app_token: str = field(default="", repr=False)
+    spaces_endpoint_url: str = ""
+    spaces_region: str = "tor1"
+    spaces_bucket: str = ""
+    spaces_key: str = field(default="", repr=False)
+    spaces_secret: str = field(default="", repr=False)
     agent_enabled: bool = False
     agent_script_url: str | None = None
     agent_id: str | None = None
@@ -61,6 +84,14 @@ class BackendSettings:
             static_dir=Path(static_value) if static_value else None,
             git_sha=os.getenv("GIT_SHA", "unknown"),
             function_token=os.getenv("FUNCTION_TO_APP_TOKEN", ""),
+            live_data_enabled=_env_bool("LIVE_DATA_ENABLED"),
+            database_url=os.getenv("DATABASE_URL", ""),
+            datasf_app_token=os.getenv("DATASF_APP_TOKEN", ""),
+            spaces_endpoint_url=os.getenv("SPACES_ENDPOINT_URL", ""),
+            spaces_region=os.getenv("SPACES_REGION", "tor1"),
+            spaces_bucket=os.getenv("SPACES_BUCKET", ""),
+            spaces_key=os.getenv("SPACES_KEY", ""),
+            spaces_secret=os.getenv("SPACES_SECRET", ""),
             agent_enabled=_env_bool("AGENT_ENABLED"),
             agent_script_url=os.getenv("AGENT_SCRIPT_URL"),
             agent_id=os.getenv("AGENT_ID"),
@@ -79,13 +110,30 @@ class BackendSettings:
 def create_app(
     settings: BackendSettings | None = None,
     request_id_factory: RequestIdFactory | None = None,
+    live_service: LiveContextService | None = None,
 ) -> FastAPI:
     settings = settings or BackendSettings.from_env()
     request_id_factory = request_id_factory or (lambda: f"req-{uuid.uuid4().hex[:16]}")
     repository = JsonReleaseRepository.load(settings.release_dir)
-    context_provider = FullGraphContextProvider(repository)
+    featured_sites = repository.list_sites()
+    featured_ids = {site.parcel_id for site in featured_sites}
+    resolver = SiteResolver(featured_sites)
+    owned_live_service = False
+    if live_service is None and settings.live_data_enabled:
+        live_service = _build_live_service(settings, repository)
+        owned_live_service = True
 
-    app = FastAPI(title="Groundwork SF Context API", version="0.1.0")
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+        if owned_live_service and live_service is not None:
+            await live_service.open()
+        try:
+            yield
+        finally:
+            if owned_live_service and live_service is not None:
+                await live_service.close()
+
+    app = FastAPI(title="Groundwork SF Context API", version="0.1.0", lifespan=lifespan)
 
     @app.middleware("http")
     async def request_ids(request: Request, call_next):
@@ -106,7 +154,9 @@ def create_app(
                     {
                         "duration_ms": round((time.perf_counter() - started_at) * 1_000, 1),
                         "event": "request_complete",
-                        "graph_release_id": repository.release_id,
+                        "graph_release_id": getattr(
+                            request.state, "graph_release_id", repository.release_id
+                        ),
                         "method": request.method,
                         "packet_sha256": getattr(request.state, "packet_sha256", None),
                         "path": request.url.path,
@@ -129,6 +179,12 @@ def create_app(
     @app.exception_handler(ContextTooLargeError)
     async def context_too_large(request: Request, error: ContextTooLargeError) -> JSONResponse:
         return _api_error(request, 413, "context_too_large", str(error))
+
+    @app.exception_handler(LiveContextUnavailableError)
+    async def live_unavailable(
+        request: Request, error: LiveContextUnavailableError
+    ) -> JSONResponse:
+        return _api_error(request, 503, "unavailable", str(error))
 
     @app.exception_handler(RequestValidationError)
     async def invalid_request(request: Request, _error: RequestValidationError) -> JSONResponse:
@@ -167,15 +223,36 @@ def create_app(
         return repository.list_sites()
 
     @app.get("/api/sites/{parcel_id}/context", response_model=ContextGraph)
-    def get_context(parcel_id: str, focus: str = "overview") -> ContextGraph:
-        return repository.get_context(parcel_id, focus)
+    async def get_context(
+        parcel_id: str, request: Request, focus: str = "overview"
+    ) -> ContextGraph:
+        if parcel_id not in featured_ids:
+            raise NotFoundError(f"No site with parcel id {parcel_id}")
+        context = (
+            await live_service.get_context(parcel_id, focus)
+            if live_service is not None
+            else repository.get_context(parcel_id, focus)
+        )
+        request.state.graph_release_id = context.release.id
+        return context
 
     @app.get("/api/evidence/{evidence_id}", response_model=EvidenceRecord)
-    def get_evidence(evidence_id: str) -> EvidenceRecord:
-        return repository.get_evidence(evidence_id)
+    async def get_evidence(evidence_id: str) -> EvidenceRecord:
+        return (
+            await live_service.get_evidence(evidence_id)
+            if live_service is not None
+            else repository.get_evidence(evidence_id)
+        )
+
+    @app.get("/api/data-status", response_model=DataStatusResponse)
+    async def data_status() -> DataStatusResponse:
+        parcel_ids = [site.parcel_id for site in featured_sites]
+        if live_service is not None:
+            return await live_service.data_status(parcel_ids)
+        return disabled_data_status(repository, parcel_ids)
 
     @app.post("/internal/agent/context", response_model=AgentContextPacket)
-    def get_agent_context(
+    async def get_agent_context(
         body: AgentContextRequest,
         request: Request,
         authorization: str | None = Header(default=None),
@@ -185,7 +262,14 @@ def create_app(
         scheme, _, token = (authorization or "").partition(" ")
         if scheme.lower() != "bearer" or not secrets.compare_digest(token, settings.function_token):
             raise UnauthorizedError("Invalid Function credential")
-        packet = context_provider.retrieve(body.site, body.focus, body.question)
+        parcel_id = resolver.resolve(body.site, allow_exact_apn=live_service is not None)
+        context = (
+            await live_service.get_context(parcel_id, body.focus)
+            if live_service is not None
+            else repository.get_context(parcel_id, body.focus)
+        )
+        packet = build_context_packet(context, body.question)
+        request.state.graph_release_id = context.release.id
         request.state.packet_sha256 = packet.packet_sha256
         return packet
 
@@ -243,6 +327,34 @@ def _mount_frontend(app: FastAPI, static_dir: Path | None) -> None:
 
 def _env_bool(name: str) -> bool:
     return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _build_live_service(
+    settings: BackendSettings, fixture: JsonReleaseRepository
+) -> LiveContextService:
+    required = {
+        "DATABASE_URL": settings.database_url,
+        "SPACES_ENDPOINT_URL": settings.spaces_endpoint_url,
+        "SPACES_BUCKET": settings.spaces_bucket,
+        "SPACES_KEY": settings.spaces_key,
+        "SPACES_SECRET": settings.spaces_secret,
+    }
+    missing = [name for name, value in required.items() if not value]
+    if missing:
+        raise ValueError(f"LIVE_DATA_ENABLED requires {', '.join(missing)}")
+    return LiveContextService(
+        fixture=fixture,
+        client=HttpDataSFClient(app_token=settings.datasf_app_token),
+        compiler=DataSFCompiler(),
+        contexts=PostgresContextStore(settings.database_url),
+        artifacts=SpacesArtifactStore.create(
+            endpoint_url=settings.spaces_endpoint_url,
+            region=settings.spaces_region,
+            bucket=settings.spaces_bucket,
+            access_key_id=settings.spaces_key,
+            secret_access_key=settings.spaces_secret,
+        ),
+    )
 
 
 app = create_app()
