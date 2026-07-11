@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import csv
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -11,6 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RAG_DIR = ROOT / "rag"
 EVALUATION_PATH = ROOT / "evaluations" / "groundwork-agent-v1.csv"
+AGENT_INSTRUCTIONS_PATH = ROOT / "ops" / "agent-instructions.md"
+AGENT_FUNCTION_ROUTE_PATH = ROOT / "ops" / "agent-function-route.json"
 
 RAG_DOCUMENTS = (
     RAG_DIR / "methodology.md",
@@ -27,6 +30,38 @@ SITE_FACT_MARKERS = (
     "1939 market",
     "758 pacific",
     "772 pacific",
+)
+
+CANONICAL_SITE_MAP = {
+    "300 Haro": "3956008",
+    "300 De Haro": "3956008",
+    "1939 Market": "3501006",
+    "758 Pacific": "0161014",
+    "772 Pacific": "0161014",
+    "758/772 Pacific": "0161014",
+}
+
+AGENT_AMBIGUITY_CONTRACT = (
+    "Match a canonical alias only when the entire normalized site identifier "
+    "exactly equals a listed alias.",
+    "Bare `Pacific`, `Market`, and `Haro` are ambiguous.",
+    "Do not call `get-site-context`, choose an APN, or answer site facts for "
+    "an ambiguous identifier.",
+)
+AGENT_RETRY_CONTRACT = "call the Function exactly one more time with that APN."
+
+ROUTE_AMBIGUITY_CONTRACT = (
+    "Match a canonical alias only when the entire normalized site identifier "
+    "exactly equals a listed alias.",
+    "Bare Pacific, Market, and Haro are ambiguous; do not call this Function "
+    "or choose an APN for them.",
+)
+ROUTE_RETRY_CONTRACT = "call exactly one more time with its APN."
+
+ROUTE_CANONICAL_MAP = (
+    "Canonical aliases: 300 Haro or 300 De Haro = APN 3956008; "
+    "1939 Market = APN 3501006; 758 Pacific, 772 Pacific, or "
+    "758/772 Pacific = APN 0161014."
 )
 
 
@@ -118,11 +153,50 @@ def _validate_evaluation(rows: list[dict[str, str]], errors: list[str]) -> None:
                 )
 
 
+def _validate_agent_assets(errors: list[str]) -> None:
+    instructions = AGENT_INSTRUCTIONS_PATH.read_text(encoding="utf-8")
+    for clause in AGENT_AMBIGUITY_CONTRACT:
+        if " ".join(clause.split()) not in " ".join(instructions.split()):
+            errors.append(f"agent instructions are missing contract clause: {clause!r}")
+    if AGENT_RETRY_CONTRACT not in " ".join(instructions.split()):
+        errors.append("agent instructions are missing the one-retry contract")
+
+    try:
+        route = json.loads(AGENT_FUNCTION_ROUTE_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as error:
+        errors.append(f"agent Function route is not valid JSON: {error}")
+        return
+
+    route_description = route.get("description", "")
+    parameters = route.get("input_schema", {}).get("parameters", [])
+    site_parameters = [parameter for parameter in parameters if parameter.get("name") == "site"]
+    if len(site_parameters) != 1:
+        errors.append("agent Function route must define exactly one site parameter")
+        return
+
+    site_description = site_parameters[0].get("description", "")
+    for clause in ROUTE_AMBIGUITY_CONTRACT:
+        if " ".join(clause.split()) not in " ".join(route_description.split()):
+            errors.append(f"agent Function description is missing contract clause: {clause!r}")
+        if " ".join(clause.split()) not in " ".join(site_description.split()):
+            errors.append(f"agent site parameter is missing contract clause: {clause!r}")
+    if ROUTE_RETRY_CONTRACT not in route_description:
+        errors.append("agent Function description is missing the one-retry contract")
+
+    instruction_lines = instructions.splitlines()
+    for alias, apn in CANONICAL_SITE_MAP.items():
+        if not any(alias in line and apn in line for line in instruction_lines):
+            errors.append(f"agent instructions are missing canonical mapping {alias!r} -> {apn}")
+    if ROUTE_CANONICAL_MAP not in site_description:
+        errors.append("agent site parameter is missing the canonical demo-site map")
+
+
 def main() -> int:
     errors: list[str] = []
     _validate_rag_documents(errors)
     rows = _read_evaluation(errors)
     _validate_evaluation(rows, errors)
+    _validate_agent_assets(errors)
 
     if errors:
         for error in errors:
@@ -131,7 +205,8 @@ def main() -> int:
 
     print(
         f"Validated {len(RAG_DOCUMENTS)} methodology documents and "
-        f"{len(rows)} evaluation rows across {len(COVERAGE_GROUPS)} coverage groups."
+        f"{len(rows)} evaluation rows across {len(COVERAGE_GROUPS)} coverage groups, and "
+        "the Agent ambiguity contract."
     )
     return 0
 
