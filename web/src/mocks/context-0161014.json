@@ -1,0 +1,615 @@
+{
+  "schema_version": "1.0",
+  "release": {
+    "id": "mock-release-0001",
+    "created_at": "2026-07-10T12:00:00-07:00",
+    "source_cutoff_at": "2026-07-10T12:00:00-07:00",
+    "compiler_version": "mock",
+    "mock": true
+  },
+  "site": {
+    "parcel_id": "0161014",
+    "name": "758/772 Pacific Avenue",
+    "address": "758/772 Pacific Ave, San Francisco, CA 94133",
+    "subtitle": "Chinatown · BP Filed",
+    "story": "Affordable senior housing at the permit-filing stage, with a historical 2015 AHBP match that must be read carefully.",
+    "centroid": {
+      "longitude": -122.40785,
+      "latitude": 37.796978
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            -122.40843,
+            37.796578000000004
+          ],
+          [
+            -122.40727,
+            37.796578000000004
+          ],
+          [
+            -122.40727,
+            37.797378
+          ],
+          [
+            -122.40843,
+            37.797378
+          ],
+          [
+            -122.40843,
+            37.796578000000004
+          ]
+        ]
+      ]
+    },
+    "headline": {
+      "label": "Affordable units",
+      "value": "174"
+    }
+  },
+  "focus": "overview",
+  "entities": [
+    {
+      "id": "ent-0161014-parcel",
+      "kind": "parcel",
+      "label": "Parcel 0161014",
+      "description": "758/772 Pacific Ave — Chinatown. Block 0161, lot 014.",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.40843,
+              37.796578000000004
+            ],
+            [
+              -122.40727,
+              37.796578000000004
+            ],
+            [
+              -122.40727,
+              37.797378
+            ],
+            [
+              -122.40843,
+              37.797378
+            ],
+            [
+              -122.40843,
+              37.796578000000004
+            ]
+          ]
+        ]
+      },
+      "source_count": 3
+    },
+    {
+      "id": "ent-0161014-project",
+      "kind": "development_project",
+      "label": "758/772 Pacific project",
+      "description": "Affordable senior housing — 174 of 175 proposed units affordable.",
+      "geometry": null,
+      "source_count": 2
+    },
+    {
+      "id": "ent-0161014-permit",
+      "kind": "permit",
+      "label": "Permit 202301037710",
+      "description": "New construction site permit, filed.",
+      "geometry": null,
+      "source_count": 1
+    },
+    {
+      "id": "ent-0161014-assessor",
+      "kind": "assessment_series",
+      "label": "Assessor roll 2016–2024",
+      "description": "Grouped secured-roll history for block/lot 0161/014.",
+      "geometry": null,
+      "source_count": 1
+    },
+    {
+      "id": "ent-0161014-ahbp",
+      "kind": "housing_program",
+      "label": "AHBP match (2015)",
+      "description": "Historical Affordable Housing Bonus Program eligibility match from the 2015 layer.",
+      "geometry": null,
+      "source_count": 1
+    },
+    {
+      "id": "ent-0161014-flood",
+      "kind": "hazard_map",
+      "label": "Flood risk zone (Jul 2022)",
+      "description": "100-year storm flood risk zone layer, evaluated against parcel geometry.",
+      "geometry": null,
+      "source_count": 1
+    },
+    {
+      "id": "ent-0161014-311",
+      "kind": "neighborhood_signal",
+      "label": "311 cases · 150 m",
+      "description": "Aggregated 311 cases within 150 m over the last 90 days.",
+      "geometry": null,
+      "source_count": 1
+    }
+  ],
+  "assertions": [
+    {
+      "id": "asrt-0161014-located-on",
+      "subject_id": "ent-0161014-project",
+      "predicate": "located_on",
+      "predicate_label": "located on",
+      "category": "identity",
+      "object": {
+        "kind": "entity",
+        "entity_id": "ent-0161014-parcel"
+      },
+      "effective_at": "2023-01-03",
+      "observed_at": "2026-06-30",
+      "evidence_ids": [
+        "ev-6jgi-cpb4-0161014",
+        "ev-acdm-wktn-0161014"
+      ]
+    },
+    {
+      "id": "asrt-0161014-authorizes",
+      "subject_id": "ent-0161014-permit",
+      "predicate": "authorizes",
+      "predicate_label": "authorizes (filed)",
+      "category": "permits",
+      "object": {
+        "kind": "entity",
+        "entity_id": "ent-0161014-project"
+      },
+      "effective_at": "2025-02-20",
+      "observed_at": "2026-07-05",
+      "evidence_ids": [
+        "ev-i98e-djp9-mock-record-0161014-1"
+      ]
+    },
+    {
+      "id": "asrt-0161014-describes",
+      "subject_id": "ent-0161014-assessor",
+      "predicate": "describes",
+      "predicate_label": "describes",
+      "category": "overview",
+      "object": {
+        "kind": "entity",
+        "entity_id": "ent-0161014-parcel"
+      },
+      "effective_at": null,
+      "observed_at": "2025-09-14",
+      "evidence_ids": [
+        "ev-wv5m-vpq2-0161014-series"
+      ]
+    },
+    {
+      "id": "asrt-0161014-ahbp-match",
+      "subject_id": "ent-0161014-ahbp",
+      "predicate": "matched",
+      "predicate_label": "matched (2015 layer)",
+      "category": "housing",
+      "object": {
+        "kind": "entity",
+        "entity_id": "ent-0161014-parcel"
+      },
+      "effective_at": "2015-10-02",
+      "observed_at": "2026-07-10",
+      "evidence_ids": [
+        "ev-fizh-zaxt-0161014"
+      ]
+    },
+    {
+      "id": "asrt-0161014-flood-eval",
+      "subject_id": "ent-0161014-flood",
+      "predicate": "evaluated_against",
+      "predicate_label": "evaluated against",
+      "category": "hazards",
+      "object": {
+        "kind": "entity",
+        "entity_id": "ent-0161014-parcel"
+      },
+      "effective_at": "2022-07-19",
+      "observed_at": "2026-07-10",
+      "evidence_ids": [
+        "ev-jzu3-4yxp-0161014"
+      ]
+    },
+    {
+      "id": "asrt-0161014-near",
+      "subject_id": "ent-0161014-311",
+      "predicate": "near",
+      "predicate_label": "near (150 m)",
+      "category": "neighborhood",
+      "object": {
+        "kind": "entity",
+        "entity_id": "ent-0161014-parcel"
+      },
+      "effective_at": null,
+      "observed_at": "2026-07-09",
+      "evidence_ids": [
+        "ev-vw6y-z8j6-0161014"
+      ]
+    },
+    {
+      "id": "asrt-0161014-proposed-units",
+      "subject_id": "ent-0161014-project",
+      "predicate": "proposed_units",
+      "predicate_label": "proposed units",
+      "category": "housing",
+      "object": {
+        "kind": "literal",
+        "value": 175,
+        "datatype": "integer",
+        "unit": "units"
+      },
+      "effective_at": "2025-02-20",
+      "observed_at": "2026-06-30",
+      "evidence_ids": [
+        "ev-6jgi-cpb4-0161014"
+      ]
+    },
+    {
+      "id": "asrt-0161014-affordable-units",
+      "subject_id": "ent-0161014-project",
+      "predicate": "affordable_units",
+      "predicate_label": "affordable units",
+      "category": "housing",
+      "object": {
+        "kind": "literal",
+        "value": 174,
+        "datatype": "integer",
+        "unit": "units"
+      },
+      "effective_at": "2025-02-20",
+      "observed_at": "2026-06-30",
+      "evidence_ids": [
+        "ev-6jgi-cpb4-0161014"
+      ]
+    },
+    {
+      "id": "asrt-0161014-status",
+      "subject_id": "ent-0161014-project",
+      "predicate": "status",
+      "predicate_label": "status",
+      "category": "housing",
+      "object": {
+        "kind": "literal",
+        "value": "BP Filed",
+        "datatype": "string",
+        "unit": null
+      },
+      "effective_at": "2025-02-20",
+      "observed_at": "2026-06-30",
+      "evidence_ids": [
+        "ev-6jgi-cpb4-0161014"
+      ]
+    },
+    {
+      "id": "asrt-0161014-desc",
+      "subject_id": "ent-0161014-project",
+      "predicate": "description",
+      "predicate_label": "described as",
+      "category": "housing",
+      "object": {
+        "kind": "literal",
+        "value": "Affordable senior housing",
+        "datatype": "string",
+        "unit": null
+      },
+      "effective_at": null,
+      "observed_at": "2026-06-30",
+      "evidence_ids": [
+        "ev-6jgi-cpb4-0161014"
+      ]
+    },
+    {
+      "id": "asrt-0161014-ahbp-historical",
+      "subject_id": "ent-0161014-ahbp",
+      "predicate": "layer_vintage",
+      "predicate_label": "layer vintage",
+      "category": "housing",
+      "object": {
+        "kind": "literal",
+        "value": 2015,
+        "datatype": "integer",
+        "unit": null
+      },
+      "effective_at": "2015-10-02",
+      "observed_at": "2026-07-10",
+      "evidence_ids": [
+        "ev-fizh-zaxt-0161014"
+      ]
+    },
+    {
+      "id": "asrt-0161014-permit-status",
+      "subject_id": "ent-0161014-permit",
+      "predicate": "permit_status",
+      "predicate_label": "permit status",
+      "category": "permits",
+      "object": {
+        "kind": "literal",
+        "value": "Filed",
+        "datatype": "string",
+        "unit": null
+      },
+      "effective_at": "2025-02-20",
+      "observed_at": "2026-07-05",
+      "evidence_ids": [
+        "ev-i98e-djp9-mock-record-0161014-1"
+      ]
+    },
+    {
+      "id": "asrt-0161014-case-count",
+      "subject_id": "ent-0161014-311",
+      "predicate": "case_count_90d",
+      "predicate_label": "90-day case count",
+      "category": "neighborhood",
+      "object": {
+        "kind": "literal",
+        "value": 31,
+        "datatype": "integer",
+        "unit": "cases"
+      },
+      "effective_at": null,
+      "observed_at": "2026-07-09",
+      "evidence_ids": [
+        "ev-vw6y-z8j6-0161014"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev-acdm-wktn-0161014",
+      "dataset_id": "acdm-wktn",
+      "dataset_name": "Parcels — Active and Retired",
+      "title": "Parcel record 0161014",
+      "record_key": "0161014",
+      "source_url": "https://data.sfgov.org/d/acdm-wktn",
+      "record_url": null,
+      "license_id": "PDDL-1.0",
+      "retrieved_at": "2026-07-10T11:42:00-07:00",
+      "source_updated_at": "2026-07-08T04:10:00-07:00",
+      "artifact_sha256": "mockevacdmwk9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "scope_note": "Active parcel row; geometry simplified for the mock fixture.",
+      "parcel_ids": [
+        "0161014"
+      ],
+      "assertion_ids": [
+        "asrt-0161014-located-on"
+      ],
+      "fields": {
+        "blklot": "0161014",
+        "block_num": "0161",
+        "lot_num": "014",
+        "active": true
+      }
+    },
+    {
+      "id": "ev-6jgi-cpb4-0161014",
+      "dataset_id": "6jgi-cpb4",
+      "dataset_name": "San Francisco Development Pipeline",
+      "title": "Pipeline entry — 758 Pacific Ave",
+      "record_key": "PL-2026Q1-0161014",
+      "source_url": "https://data.sfgov.org/d/6jgi-cpb4",
+      "record_url": null,
+      "license_id": "PDDL-1.0",
+      "retrieved_at": "2026-07-10T11:42:00-07:00",
+      "source_updated_at": "2026-06-30T02:00:00-07:00",
+      "artifact_sha256": "mockev6jgicp9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "scope_note": null,
+      "parcel_ids": [
+        "0161014"
+      ],
+      "assertion_ids": [
+        "asrt-0161014-located-on",
+        "asrt-0161014-proposed-units",
+        "asrt-0161014-affordable-units",
+        "asrt-0161014-status",
+        "asrt-0161014-desc"
+      ],
+      "fields": {
+        "nameaddr": "758 Pacific Ave",
+        "units": 175,
+        "affordable_units": 174,
+        "beststat": "BP Filed",
+        "bestdate": "2025-02-20",
+        "description": "Affordable senior housing with community space."
+      }
+    },
+    {
+      "id": "ev-i98e-djp9-mock-record-0161014-1",
+      "dataset_id": "i98e-djp9",
+      "dataset_name": "Building Permits",
+      "title": "Building permit 202301037710",
+      "record_key": "202301037710",
+      "source_url": "https://data.sfgov.org/d/i98e-djp9",
+      "record_url": null,
+      "license_id": "PDDL-1.0",
+      "retrieved_at": "2026-07-10T11:42:00-07:00",
+      "source_updated_at": "2026-07-05T03:30:00-07:00",
+      "artifact_sha256": "mockevi98edj9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "scope_note": null,
+      "parcel_ids": [
+        "0161014"
+      ],
+      "assertion_ids": [
+        "asrt-0161014-authorizes",
+        "asrt-0161014-permit-status"
+      ],
+      "fields": {
+        "permit_number": "202301037710",
+        "permit_type": "New construction",
+        "status": "Filed",
+        "status_date": "2025-02-20",
+        "description": "ERECT 9-STORY SENIOR AFFORDABLE HOUSING BUILDING."
+      }
+    },
+    {
+      "id": "ev-wv5m-vpq2-0161014-series",
+      "dataset_id": "wv5m-vpq2",
+      "dataset_name": "Assessor Historical Secured Property Tax Rolls",
+      "title": "Secured roll series 2016–2024",
+      "record_key": "0161014:2016-2024",
+      "source_url": "https://data.sfgov.org/d/wv5m-vpq2",
+      "record_url": null,
+      "license_id": "PDDL-1.0",
+      "retrieved_at": "2026-07-10T11:42:00-07:00",
+      "source_updated_at": "2025-09-14T02:00:00-07:00",
+      "artifact_sha256": "mockevwv5mvp9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "scope_note": "Series grouped from nine annual roll rows.",
+      "parcel_ids": [
+        "0161014"
+      ],
+      "assertion_ids": [
+        "asrt-0161014-describes"
+      ],
+      "fields": {
+        "closed_roll_years": "2016–2024",
+        "latest_land_value_usd": 6200000,
+        "latest_improvement_value_usd": 830000,
+        "use_code": "VCI"
+      }
+    },
+    {
+      "id": "ev-fizh-zaxt-0161014",
+      "dataset_id": "fizh-zaxt",
+      "dataset_name": "Affordable Housing Bonus Program Eligible Parcels",
+      "title": "AHBP eligible-parcels match",
+      "record_key": "ahbp:0161014",
+      "source_url": "https://data.sfgov.org/d/fizh-zaxt",
+      "record_url": null,
+      "license_id": "PDDL-1.0",
+      "retrieved_at": "2026-07-10T11:42:00-07:00",
+      "source_updated_at": "2015-10-02T00:00:00-07:00",
+      "artifact_sha256": "mockevfizhza9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "scope_note": "HISTORICAL: the parcel matched the 2015 AHBP eligible layer. The program has since changed; this match must not be read as current eligibility.",
+      "parcel_ids": [
+        "0161014"
+      ],
+      "assertion_ids": [
+        "asrt-0161014-ahbp-match",
+        "asrt-0161014-ahbp-historical"
+      ],
+      "fields": {
+        "matched_row": true,
+        "layer_vintage": 2015,
+        "program_tier": "AHBP eligible"
+      }
+    },
+    {
+      "id": "ev-jzu3-4yxp-0161014",
+      "dataset_id": "jzu3-4yxp",
+      "dataset_name": "100-Year Storm Flood Risk Zone",
+      "title": "Flood risk zone evaluation",
+      "record_key": "flood:0161014",
+      "source_url": "https://data.sfgov.org/d/jzu3-4yxp",
+      "record_url": null,
+      "license_id": "PDDL-1.0",
+      "retrieved_at": "2026-07-10T11:42:00-07:00",
+      "source_updated_at": "2022-07-19T00:00:00-07:00",
+      "artifact_sha256": "mockevjzu34y9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "scope_note": "Mock graph records only that the parcel was evaluated against the July 2022 layer. No current flood-risk conclusion is asserted.",
+      "parcel_ids": [
+        "0161014"
+      ],
+      "assertion_ids": [
+        "asrt-0161014-flood-eval"
+      ],
+      "fields": {
+        "layer_effective": "2022-07-19",
+        "evaluation": "geometry compared",
+        "intersection_conclusion": null
+      }
+    },
+    {
+      "id": "ev-vw6y-z8j6-0161014",
+      "dataset_id": "vw6y-z8j6",
+      "dataset_name": "311 Cases",
+      "title": "311 cases within 150 m (90 days)",
+      "record_key": "311:0161014:150m:90d",
+      "source_url": "https://data.sfgov.org/d/vw6y-z8j6",
+      "record_url": null,
+      "license_id": "PDDL-1.0",
+      "retrieved_at": "2026-07-10T11:42:00-07:00",
+      "source_updated_at": "2026-07-09T05:00:00-07:00",
+      "artifact_sha256": "mockevvw6yz89c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "scope_note": "Proximity aggregate — describes the surrounding block, not this parcel.",
+      "parcel_ids": [
+        "0161014"
+      ],
+      "assertion_ids": [
+        "asrt-0161014-near",
+        "asrt-0161014-case-count"
+      ],
+      "fields": {
+        "case_count": 31,
+        "top_category": "Street and sidewalk cleaning",
+        "radius_m": 150,
+        "window_days": 90
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "diag-0161014-ahbp-fresh",
+      "kind": "freshness",
+      "severity": "warning",
+      "title": "AHBP match is historical (2015 layer)",
+      "detail": "This parcel matched the Affordable Housing Bonus Program eligible layer published in 2015. The program has changed since; the match is preserved as historical context only.",
+      "assertion_ids": [
+        "asrt-0161014-ahbp-match",
+        "asrt-0161014-ahbp-historical"
+      ],
+      "evidence_ids": [
+        "ev-fizh-zaxt-0161014"
+      ]
+    },
+    {
+      "id": "diag-0161014-flood-fresh",
+      "kind": "freshness",
+      "severity": "warning",
+      "title": "Flood layer predates release cutoff by ~4 years",
+      "detail": "The 100-year storm flood risk zone layer is dated 2022-07-19. Treat the hazard evaluation as historical until the layer is refreshed.",
+      "assertion_ids": [
+        "asrt-0161014-flood-eval"
+      ],
+      "evidence_ids": [
+        "ev-jzu3-4yxp-0161014"
+      ]
+    },
+    {
+      "id": "diag-0161014-311-prox",
+      "kind": "proximity_only",
+      "severity": "info",
+      "title": "311 signal is proximity-based",
+      "detail": "Case counts are aggregated within 150 m. They describe the surrounding block, not this parcel.",
+      "assertion_ids": [
+        "asrt-0161014-near",
+        "asrt-0161014-case-count"
+      ],
+      "evidence_ids": [
+        "ev-vw6y-z8j6-0161014"
+      ]
+    }
+  ],
+  "trust": {
+    "graph_release_id": "mock-release-0001",
+    "source_count": 7,
+    "assertion_count": 13,
+    "citation_coverage_percent": 100,
+    "freshness_warning_count": 2,
+    "conflict_count": 0,
+    "coverage_gap_count": 0,
+    "proximity_only_count": 1,
+    "latest_agent_evaluation": {
+      "status": "passed",
+      "evaluated_at": "2026-07-10T09:30:00-07:00",
+      "graph_release_id": "mock-release-0001",
+      "agent_config_sha256": "mockagentcfg41d2c9887ab34f0e6d5512c3a9b8e7f60d41",
+      "passed_cases": 11,
+      "total_cases": 12
+    }
+  }
+}

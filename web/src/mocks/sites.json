@@ -1,0 +1,128 @@
+[
+  {
+    "parcel_id": "3956008",
+    "name": "300 De Haro Street",
+    "address": "300 De Haro St, San Francisco, CA 94103",
+    "subtitle": "Showplace Square · Construction",
+    "story": "A 425-unit fully affordable project replacing a former industrial parcel, now under construction.",
+    "centroid": {
+      "longitude": -122.402024,
+      "latitude": 37.765725
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            -122.402604,
+            37.765325000000004
+          ],
+          [
+            -122.401444,
+            37.765325000000004
+          ],
+          [
+            -122.401444,
+            37.766125
+          ],
+          [
+            -122.402604,
+            37.766125
+          ],
+          [
+            -122.402604,
+            37.765325000000004
+          ]
+        ]
+      ]
+    },
+    "headline": {
+      "label": "Affordable units",
+      "value": "425"
+    }
+  },
+  {
+    "parcel_id": "3501006",
+    "name": "1939 Market Street",
+    "address": "1939 Market St, San Francisco, CA 94103",
+    "subtitle": "Duboce Triangle · BP Issued",
+    "story": "Affordable senior housing with its building permit issued — 185 of 187 units affordable.",
+    "centroid": {
+      "longitude": -122.425311,
+      "latitude": 37.769934
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            -122.425891,
+            37.769534
+          ],
+          [
+            -122.424731,
+            37.769534
+          ],
+          [
+            -122.424731,
+            37.770334
+          ],
+          [
+            -122.425891,
+            37.770334
+          ],
+          [
+            -122.425891,
+            37.769534
+          ]
+        ]
+      ]
+    },
+    "headline": {
+      "label": "Affordable units",
+      "value": "185"
+    }
+  },
+  {
+    "parcel_id": "0161014",
+    "name": "758/772 Pacific Avenue",
+    "address": "758/772 Pacific Ave, San Francisco, CA 94133",
+    "subtitle": "Chinatown · BP Filed",
+    "story": "Affordable senior housing at the permit-filing stage, with a historical 2015 AHBP match that must be read carefully.",
+    "centroid": {
+      "longitude": -122.40785,
+      "latitude": 37.796978
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            -122.40843,
+            37.796578000000004
+          ],
+          [
+            -122.40727,
+            37.796578000000004
+          ],
+          [
+            -122.40727,
+            37.797378
+          ],
+          [
+            -122.40843,
+            37.797378
+          ],
+          [
+            -122.40843,
+            37.796578000000004
+          ]
+        ]
+      ]
+    },
+    "headline": {
+      "label": "Affordable units",
+      "value": "174"
+    }
+  }
+]
