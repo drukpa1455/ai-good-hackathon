@@ -56,7 +56,8 @@ describe('AgentWidget', () => {
       expect(logo).toMatch(/^data:image\/svg\+xml,/);
       const logoSvg = decodeURIComponent(logo.slice('data:image/svg+xml,'.length));
       expect(logoSvg.match(/<circle/g)).toHaveLength(55);
-      expect(logoSvg).toContain('fill="#afa0ff"');
+      expect(logoSvg).toContain('fill="#111017"');
+      expect(logoSvg).not.toContain('fill="#afa0ff"');
       expect(logoSvg).not.toContain('stroke=');
       expect(script).toHaveAttribute('data-primary-color', '#5b4bc4');
       expect(script).toHaveAttribute('data-secondary-color', '#1a1822');

@@ -4,7 +4,7 @@ import { BrandMark, brandMarkDataUri } from './BrandMark';
 
 const PROVIDER_FRAME_TITLE = 'Chatbot Playground';
 const PROVIDER_TIMEOUT_MS = 65_000;
-const AGENT_LOGO_DATA_URI = brandMarkDataUri();
+const AGENT_LOGO_DATA_URI = brandMarkDataUri('#111017');
 
 function originOf(scriptUrl: string | null | undefined): string | null {
   if (!scriptUrl) return null;
