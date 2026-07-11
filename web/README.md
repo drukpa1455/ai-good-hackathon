@@ -44,9 +44,9 @@ npm --prefix web run e2e     # also writes screenshots to tmp/frontend-handoff/
 - `src/contracts.ts` owns the frozen public types plus their boundary-validation
   helpers. Backend integration preserves these shapes.
 - Graph edges derive from entity-object assertions — no duplicate edges array.
-- The map tile endpoint lives in one module: `src/map/tiles.ts` (official OSM
-  raster endpoint + required attribution; tiles-failed fallback keeps the
-  parcel on a neutral canvas).
+- The theme-aware CARTO/OSM raster endpoints live in one module:
+  `src/map/tiles.ts` (`dark_all`/`light_all` plus required dual attribution;
+  tiles-failed fallback keeps the parcel on a neutral canvas).
 - `AgentWidget.tsx` only injects DigitalOcean's generated widget script from
   runtime config. No custom chat transport, transcript, composer, or proxy.
 - No DataSF calls, no source-join logic, no legal/safety/valuation/suitability

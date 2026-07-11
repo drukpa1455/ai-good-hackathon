@@ -37,6 +37,10 @@ vi.mock('maplibre-gl', () => {
     getSource() {
       return undefined;
     }
+    getLayer() {
+      return undefined;
+    }
+    setPaintProperty() {}
     fitBounds() {}
     isStyleLoaded() {
       return false;
