@@ -481,6 +481,41 @@ button {
   position: absolute;
   inset: 0;
 }
+.graph-zoom {
+  position: absolute;
+  right: 27px;
+  bottom: 84px;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.graph-zoom button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--brd);
+  border-radius: 9px;
+  background: var(--srf);
+  color: var(--dim);
+  box-shadow: var(--shadow);
+  font-family: var(--font-label);
+  font-size: 15px;
+  line-height: 1;
+}
+.graph-zoom button:hover,
+.graph-zoom button:focus-visible {
+  border-color: var(--acc);
+  color: var(--tx);
+}
+.graph-zoom__lod {
+  font-family: var(--font-label);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fnt2);
+}
 .legendbox {
   position: absolute;
   left: 12px;
@@ -805,6 +840,9 @@ button {
   align-items: flex-end;
   gap: 8px;
 }
+.agentcorner > [role='note'] {
+  margin-right: 52px;
+}
 .agentlauncher {
   width: 56px;
   height: 56px;
@@ -961,6 +999,7 @@ button {
   }
   .agentcorner > [role='note'] {
     max-width: none !important;
+    margin-right: 0;
   }
   .groundwork-agent-provider-frame[data-groundwork-state='compact'] {
     right: 9px !important;
@@ -981,6 +1020,10 @@ button {
   }
   .graphpane {
     padding-bottom: 88px; /* keep content clear of the chat launcher */
+  }
+  .graph-zoom button {
+    width: 44px;
+    height: 44px;
   }
   .suggestedquestions__list {
     grid-template-columns: 1fr;
