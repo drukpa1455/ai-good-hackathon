@@ -131,10 +131,11 @@ describe('entity glyphs', () => {
 
   it('keeps every glyph centered and proportional while degree changes node diameter', () => {
     for (const kind of KINDS) {
+      const size = kind === 'parcel' ? '58%' : '68%';
       expect(entityGlyphBackground(kind, '#afa0ff')).toMatchObject({
         'background-fit': 'none',
-        'background-width': '68%',
-        'background-height': '68%',
+        'background-width': size,
+        'background-height': size,
         'background-position-x': '50%',
         'background-position-y': '50%',
       });
