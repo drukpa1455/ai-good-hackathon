@@ -5,6 +5,8 @@ Status: Ready for frontend implementation
 Audience: Design/frontend agent working independently from the backend and
 data-graph work
 
+Repository: <https://github.com/drukpa1455/ai-good-hackathon>
+
 ## Mission
 
 Build the complete judge-facing frontend against deterministic mock data. The
@@ -20,6 +22,20 @@ The frontend should make one idea immediately legible:
 
 > Every visible claim is part of a source-backed context graph, and uncertainty
 > stays visible.
+
+## Required Design References
+
+Before changing the visual system, study the existing work in the
+[Claude Design project](https://claude.ai/design/p/4919ebb1-b8c1-440c-81e2-e86ee7e89ab0),
+especially—but not only—the following artifacts:
+
+- [Brand Kit Dark](https://claude.ai/design/p/4919ebb1-b8c1-440c-81e2-e86ee7e89ab0?file=Brand+Kit+Dark.dc.html)
+- [Brand Kit Light](https://claude.ai/design/p/4919ebb1-b8c1-440c-81e2-e86ee7e89ab0?file=Brand+Kit+Light.dc.html)
+- [Schema Glyphs](https://claude.ai/design/p/4919ebb1-b8c1-440c-81e2-e86ee7e89ab0?file=Schema+Glyphs.dc.html)
+
+Use those references as the starting point for brand, color, typography, icon,
+glyph, and light/dark-mode decisions. This handoff remains the source of truth
+for product behavior, data semantics, interaction boundaries, and acceptance.
 
 ## Ownership Boundary
 
