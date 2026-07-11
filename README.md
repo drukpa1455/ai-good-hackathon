@@ -6,9 +6,9 @@ Public concept and build workspace for **AI for Social Good: Hack with MLH & Dig
 
 Concept selection only. No final product, application, model, or third-party dataset has been published here.
 
-The current lead is a source-grounded property evidence room: deterministic tools reconcile official parcel, assessor, permit, planning, hazard, and optional 3D evidence; [DigitalOcean Inference](https://docs.digitalocean.com/products/inference/) explains the resulting evidence without becoming the source of facts or making legal, safety, valuation, or buy/sell claims.
+The current lead is an independently branded San Francisco community site context graph: deterministic tools reconcile official parcel, assessor, permit, planning, hazard, and neighborhood evidence into a source-backed graph; [DigitalOcean Inference](https://docs.digitalocean.com/products/inference/) explains bounded context subgraphs without becoming the source of facts or making legal, safety, valuation, or buy/sell claims.
 
-See [ideas.md](ideas.md) for the current shortlist and go/no-go criteria.
+See [ideas.md](ideas.md) for the current shortlist and go/no-go criteria, [resources.md](resources.md) for links collected at the kickoff, and the [frontend design handoff](docs/frontend-design-handoff.md) for the mock-first UI contract.
 
 ## Candidate Public Sources
 
@@ -16,6 +16,7 @@ San Francisco sources under consideration:
 
 - [Assessor Historical Secured Property Tax Rolls](https://data.sfgov.org/Housing-and-Buildings/Assessor-Historical-Secured-Property-Tax-Rolls/wv5m-vpq2/about_data)
 - [Building Permits](https://data.sfgov.org/Housing-and-Buildings/Building-Permits/i98e-djp9/about_data)
+- [San Francisco Development Pipeline](https://data.sfgov.org/Housing-and-Buildings/San-Francisco-Development-Pipeline/6jgi-cpb4/about_data)
 - [Parcels — Active and Retired](https://data.sfgov.org/Geographic-Locations-and-Boundaries/Parcels-Active-and-Retired/acdm-wktn/about_data)
 - [Affordable Housing Bonus Program eligible parcels](https://data.sfgov.org/d/fizh-zaxt)
 - [100-Year Storm Flood Risk Zone](https://data.sfgov.org/d/jzu3-4yxp)
@@ -30,13 +31,14 @@ Candidate 3D sources:
 
 ## Platform Direction
 
-The smallest intended DigitalOcean path is:
+The intended DigitalOcean demo path is:
 
-1. deterministic public-data queries and comparisons
-2. a compact evidence packet
-3. grounded synthesis through DigitalOcean Inference
-4. citation and numeric-fidelity evaluation
-5. optional deployment through [DigitalOcean App Platform](https://docs.digitalocean.com/products/app-platform/)
+1. preload bounded DataSF source snapshots into a canonical context graph
+2. traverse a property-centered context subgraph deterministically
+3. combine graph retrieval with managed knowledge-base retrieval
+4. let a DigitalOcean agent explain the combined context with source citations
+5. evaluate grounding, citation coverage, numeric fidelity, and refusal behavior
+6. deploy the interactive map, graph, evidence viewer, and chat through [DigitalOcean App Platform](https://docs.digitalocean.com/products/app-platform/)
 
 No paid API, cloud resource, or deployment is authorized merely by its mention here.
 

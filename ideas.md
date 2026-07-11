@@ -2,17 +2,24 @@
 
 _Status: brainstorming only; no final concept selected._
 
-## Lead Idea: Reia Property Evidence Room
+## Lead Idea: San Francisco Community Site Context Graph
 
-Select a San Francisco parcel and build a proof-carrying diligence memo from official records:
+Select a San Francisco parcel and build a proof-carrying community site brief from official records:
 
 - [assessor history and parcel characteristics](https://data.sfgov.org/Housing-and-Buildings/Assessor-Historical-Secured-Property-Tax-Rolls/wv5m-vpq2/about_data)
 - [building permits and proposed changes](https://data.sfgov.org/Housing-and-Buildings/Building-Permits/i98e-djp9/about_data)
+- [development pipeline projects](https://data.sfgov.org/Housing-and-Buildings/San-Francisco-Development-Pipeline/6jgi-cpb4/about_data)
 - zoning, land use, affordable-housing eligibility, and hazards
 - optional [2023 USGS LiDAR](https://www.fisheries.noaa.gov/inport/item/73386) evidence for one small 3D area
 - explicit contradictions, stale claims, missing data, and source dates
 
-Deterministic tools own facts and comparisons. [DigitalOcean Inference](https://docs.digitalocean.com/products/inference/) turns the evidence into a cited memo and refuses valuation, legal, safety, or buy/sell conclusions. Evaluations test citations and numeric fidelity; [App Platform](https://docs.digitalocean.com/products/app-platform/) can host the demo.
+The canonical graph owns sources, records, entities, events, assertions, relationships, and evidence state. Evidence packets, vector indexes, context subgraphs, and generated briefs are projections. Deterministic tools own identity, joins, dates, geometry, comparisons, citations, and conflict state.
+
+For the demo, preload a small set of deep, compelling parcel graphs and label the coverage explicitly. A DigitalOcean agent combines graph-tool results with managed knowledge-base retrieval, explains the bounded context, answers follow-up questions, and refuses valuation, legal, safety, or buy/sell conclusions.
+
+DigitalOcean owns the hosted demo stack: Managed PostgreSQL for the canonical graph, Spaces for immutable source snapshots and knowledge-base inputs, Knowledge Bases and OpenSearch for unstructured RAG, Functions for agent graph-query routes, Agent Platform for chat, Evaluations for groundedness and refusal tests, and App Platform for the interactive application.
+
+The judge-facing experience is a synchronized map, context graph, evidence viewer, chatbot, selected-site provenance panel, and latest fixed agent evaluation showing citation coverage, numeric fidelity, disclosed conflicts, stale-source warnings, and unsupported-claim count.
 
 Social-good framing: first-pass site diligence for community land trusts or affordable-housing organizations.
 
