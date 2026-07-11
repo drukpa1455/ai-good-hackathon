@@ -883,6 +883,11 @@ button {
   transform: scale(0.875);
   transform-origin: right bottom;
 }
+:root[data-theme='dark']
+  .groundwork-agent-provider-frame:not([data-groundwork-state='compact']) {
+  /* The cross-origin provider hard-codes white chat surfaces. */
+  filter: invert(1) hue-rotate(180deg);
+}
 
 /* ---------- mobile ---------- */
 .mobilebars {
