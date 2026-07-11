@@ -103,6 +103,102 @@ Vitest, and the desktop/mobile product flow with Playwright and axe. The same
 browser suite runs in deterministic mock mode and against the deployed API
 contract.
 
+## Architecture
+
+Groundwork uses DigitalOcean for the complete deployed path while keeping one
+deterministic graph contract at the center.
+
+```text
+                              DIGITALOCEAN
+
+ Browser                App Platform
+ React + MapLibre  <-->  React/FastAPI container
+ + Cytoscape                    |
+      |                         +--> Managed PostgreSQL 17
+      |                         |    snapshots + refresh leases
+      |                         +--> private Spaces
+      |                         |    content-addressed DataSF artifacts
+      |                         +--> seven bounded DataSF queries
+      |
+      +--> generated widget --> GLM-5.2 Agent
+                                     |
+                         site facts  +--> secure Function
+                                     |       |
+                                     |       +--> protected graph packet
+                                     |
+                         methodology +--> Knowledge Base
+                                             |
+                                             +--> Managed OpenSearch
+```
+
+### Live evidence plane
+
+For each featured parcel, the FastAPI service first reads the current
+PostgreSQL snapshot. A fresh snapshot returns immediately. A stale or missing
+snapshot can acquire a fenced refresh lease, fetch seven fixed DataSF
+projections, compile a typed graph, upload canonical source JSON to private
+Spaces, and atomically publish the graph and evidence rows. A failed refresh
+serves a clearly labeled stale snapshot or the verified fixture fallback; it
+never converts missing data into a confident claim.
+
+The graph itself is a typed application contract:
+
+```text
+Site -> Entity -> Assertion -> entity or literal
+                    |
+                    +--> EvidenceRecord -> official URLs + dates + license + SHA-256
+                    |
+                    +--> Diagnostic -> freshness | conflict | gap | proximity-only
+```
+
+PostgreSQL is the durable snapshot store, not the semantic owner. Deterministic
+compiler code owns graph meaning, and Spaces preserves the exact bounded inputs
+that produced each evidence record.
+
+### AI and graph-aware RAG plane
+
+Every site-specific question must call the DigitalOcean Function. The Function
+validates scalar inputs, makes one authenticated request to the protected App
+route, bounds the response, and verifies the graph packet digest before the
+Agent sees it. The Agent may cite only packet URLs and must preserve packet
+status, dates, conflicts, gaps, and proximity limits.
+
+Stable methodology follows a separate RAG path. A private replacement Agent
+retrieves graph semantics and responsible-use policy from a Spaces-backed
+Knowledge Base indexed by Managed OpenSearch. That Knowledge Base contains no
+featured-site facts and cannot replace a failed Function lookup. The deployed
+public Agent remains Function-backed while the replacement stays private until
+its fixed 50-query evaluation passes.
+
+### Failure boundaries
+
+- `LIVE_DATA_ENABLED=false` rolls the API back to the verified fixture release.
+- A failed or competing refresh preserves a stale snapshot instead of risking
+  an incomplete write.
+- A missing or invalid Function packet produces no site-fact answer.
+- The browser receives widget identifiers, never a model, Function, database,
+  or Spaces credential.
+- Agent promotion is independent from data deployment and happens only after
+  private probes and managed evaluation pass.
+
+### Why DigitalOcean is central
+
+DigitalOcean is the runtime fabric, not a decorative integration:
+
+- App Platform deploys the single tested frontend/API artifact and exposes its
+  revision through health checks.
+- Managed PostgreSQL and private Spaces separate current graph state from
+  immutable source evidence.
+- Functions provide the narrow, independently secured trust boundary between a
+  public Agent and protected graph data.
+- Agent Platform supplies GLM-5.2 inference and the generated streaming widget,
+  while Knowledge Bases and Managed OpenSearch add isolated methodology RAG.
+- Agent Evaluations make promotion a measured gate rather than a demo-time
+  judgment call.
+
+The full component map, sequences, limits, durability model, and interfaces are
+documented in the [current architecture](architecture.md).
+
 ## Challenges we faced
 
 The hardest problem was not drawing a graph; it was preserving meaning across

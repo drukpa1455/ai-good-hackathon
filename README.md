@@ -16,9 +16,13 @@ and limits; a DigitalOcean agent will explain a bounded graph packet without
 becoming the source of facts or making legal, safety, valuation, or buy/sell
 claims.
 
-See [ideas.md](ideas.md) for the current shortlist and go/no-go criteria, [resources.md](resources.md) for links collected at the kickoff, and the [frontend design handoff](docs/frontend-design-handoff.md) for the mock-first UI contract.
-The [Devpost submission](docs/devpost.md) preserves the public project story
-and demo script.
+See the [current architecture](docs/architecture.md) for the implemented system,
+[deck alignment review](docs/deck-review.md) for presentation corrections,
+[ideas.md](ideas.md) for the original shortlist, [resources.md](resources.md) for
+links collected at the kickoff, and the
+[frontend design handoff](docs/frontend-design-handoff.md) for the product
+contract. The [Devpost submission](docs/devpost.md) preserves the public project
+story and demo script.
 
 ## Local demo
 
