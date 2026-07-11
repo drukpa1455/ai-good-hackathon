@@ -17,6 +17,11 @@ vi.mock('cytoscape', () => {
     on: vi.fn(),
     add: vi.fn(),
     fit: vi.fn(),
+    minZoom: vi.fn(),
+    maxZoom: vi.fn(),
+    panBy: vi.fn(),
+    zoom: vi.fn(() => 1),
+    resize: vi.fn(),
     style: vi.fn(),
     destroy: vi.fn(),
     elements: collection,
@@ -87,6 +92,19 @@ describe('App routing and shell', () => {
 
     await user.click(within(nav).getByRole('button', { name: /open sites and focus/i }));
     expect(content).not.toHaveAttribute('hidden');
+  });
+
+  it('exposes graph zoom controls, detail level, and reset announcement', async () => {
+    const user = userEvent.setup();
+    renderAt('/sites/3956008');
+    const controls = await screen.findByRole('group', { name: /graph zoom controls/i });
+
+    expect(within(controls).getByRole('button', { name: /zoom graph in/i })).toBeInTheDocument();
+    expect(within(controls).getByRole('button', { name: /zoom graph out/i })).toBeInTheDocument();
+    expect(within(controls).getByText('full')).toBeInTheDocument();
+
+    await user.click(within(controls).getByRole('button', { name: /reset graph view/i }));
+    expect(screen.getByText(/graph view reset\. full detail/i)).toBeInTheDocument();
   });
 
   it('shows four copyable agent questions in Help', async () => {

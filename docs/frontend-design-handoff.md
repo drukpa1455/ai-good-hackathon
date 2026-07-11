@@ -563,6 +563,17 @@ site, not an empty site list. Tests must cover every state.
 - Source count and freshness belong in labels/tooltips, not inferred opacity.
 - A visual legend explains every entity kind and diagnostic treatment.
 - Keep labels readable at the default demo zoom.
+- Fit and reset against the stable `-36 0 1072 762` reference view; site,
+  focus, and deterministic demo-state changes reset the viewport. Mobile keeps
+  the reference `36px` fit. At the `1440x900` desktop acceptance viewport,
+  Cytoscape reserves `100px` fit padding and applies a `-30px` rendered-x pan
+  so full-detail extents clear the inspector, key, and map without changing
+  node or fact coordinates.
+- Derive detail from reference-view width: full below `1250`, mid from `1250`
+  to below `1800`, and far from `1800`. Mid detail replaces unselected fact
+  satellites with per-entity counts; far detail keeps parcel and selected
+  anchor labels. A selected entity or literal assertion's subject keeps its
+  full facts at every level.
 
 ## Evidence Drawer
 

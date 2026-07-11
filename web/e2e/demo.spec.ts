@@ -141,12 +141,26 @@ test.describe('mock states', () => {
 });
 
 test.describe('accessibility and viewport acceptance', () => {
-  test('axe reports no serious violations on the main view in either theme', async ({ page }) => {
+  test('axe reports no serious violations on the main view in either theme', async ({
+    page,
+  }, testInfo) => {
     await page.goto('/sites/3956008');
     await page.waitForTimeout(800);
+    const graph = page.locator('.graph-host');
+    const graphDetail = await graph.evaluate((element) => ({
+      lod: element.getAttribute('data-lod'),
+      facts: element.getAttribute('data-visible-facts'),
+      counts: element.getAttribute('data-visible-count-pills'),
+    }));
     await expectNoSeriousA11y(page);
     await page.getByRole('button', { name: 'Light' }).click();
     await expectNoSeriousA11y(page);
+    await expect(graph).toHaveAttribute('data-lod', graphDetail.lod!);
+    await expect(graph).toHaveAttribute('data-visible-facts', graphDetail.facts!);
+    await expect(graph).toHaveAttribute('data-visible-count-pills', graphDetail.counts!);
+    if (testInfo.project.name === 'desktop') {
+      await page.screenshot({ path: path.join(SHOTS, 'desktop-main-light.png') });
+    }
   });
 
   test('layout screenshot with agent corner clear', async ({ page }, testInfo) => {
@@ -158,10 +172,39 @@ test.describe('accessibility and viewport acceptance', () => {
     // Keep controls clear of the provider widget's fixed 80px launcher plus 24px inset.
     const viewport = page.viewportSize();
     const diagnostics = page.getByRole('button', { name: 'Diagnostics' });
-    const box = await diagnostics.boundingBox();
+    const zoomControls = page.getByRole('group', { name: 'Graph zoom controls' });
+    const [box, zoomBox] = await Promise.all([
+      diagnostics.boundingBox(),
+      zoomControls.boundingBox(),
+    ]);
     expect(viewport).not.toBeNull();
     expect(box).not.toBeNull();
+    expect(zoomBox).not.toBeNull();
     expect(box!.x + box!.width).toBeLessThanOrEqual(viewport!.width - 104);
+    expect(zoomBox!.x).toBeGreaterThanOrEqual(0);
+    expect(zoomBox!.x + zoomBox!.width).toBeLessThanOrEqual(viewport!.width);
+    const agentStatus = page.getByRole('note', { name: 'Agent status' });
+    if (await agentStatus.isVisible()) {
+      const agentBox = await agentStatus.boundingBox();
+      expect(agentBox).not.toBeNull();
+      const overlaps =
+        zoomBox!.x < agentBox!.x + agentBox!.width &&
+        zoomBox!.x + zoomBox!.width > agentBox!.x &&
+        zoomBox!.y < agentBox!.y + agentBox!.height &&
+        zoomBox!.y + zoomBox!.height > agentBox!.y;
+      expect(overlaps).toBe(false);
+    }
+    if (testInfo.project.name === 'mobile') {
+      for (const button of await zoomControls.getByRole('button').all()) {
+        const target = await button.boundingBox();
+        expect(target).not.toBeNull();
+        expect(target!.width).toBeGreaterThanOrEqual(44);
+        expect(target!.height).toBeGreaterThanOrEqual(44);
+      }
+    }
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth))
+      .toBeLessThanOrEqual(viewport!.width);
   });
 
   test('desktop uses the full-bleed corner shell and folding rail', async ({ page }, testInfo) => {
@@ -191,6 +234,42 @@ test.describe('accessibility and viewport acceptance', () => {
     await expect.poll(async () => Math.round((await graph.boundingBox())?.width ?? 0)).toBeGreaterThan(1390);
     await expect(page).toHaveURL(/focus=housing/);
     await expect(page.getByRole('region', { name: 'Context graph' })).toBeVisible();
+  });
+
+  test('graph zoom moves full to mid to far, resets, and preserves selected facts', async ({
+    page,
+  }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'desktop only');
+    await page.goto('/sites/3956008');
+
+    const graph = page.locator('.graph-host');
+    const controls = page.getByRole('group', { name: 'Graph zoom controls' });
+    const zoomOut = controls.getByRole('button', { name: 'Zoom graph out' });
+    const lod = controls.locator('.graph-zoom__lod');
+
+    await expect(graph).toHaveAttribute('data-lod', 'full');
+    await expect(lod).toHaveText('full');
+
+    await zoomOut.click();
+    await expect(graph).toHaveAttribute('data-lod', 'mid');
+    await expect(graph).toHaveAttribute('data-visible-facts', '0');
+    await expect(graph).toHaveAttribute('data-visible-count-pills', /^[1-9]\d*$/);
+
+    await zoomOut.click();
+    await expect(graph).toHaveAttribute('data-lod', 'far');
+    await expect(graph).toHaveAttribute('data-visible-count-pills', '0');
+
+    await controls.getByRole('button', { name: 'Reset graph view' }).click();
+    await expect(graph).toHaveAttribute('data-lod', 'full');
+    await expect(page.locator('.graphpane [aria-live="polite"]')).toContainText('Graph view reset');
+
+    await page.getByRole('list', { name: 'Graph entities' }).getByText('300 De Haro project').click();
+    await zoomOut.click();
+    await zoomOut.click();
+    await expect(graph).toHaveAttribute('data-lod', 'far');
+    await expect(graph).toHaveAttribute('data-selected-subject', /.+/);
+    await expect(graph).toHaveAttribute('data-visible-facts', /^[1-9]\d*$/);
+    await expect(page.getByLabel('Graph detail summary')).toContainText('selected facts expanded');
   });
 
   test('Help presents the suggested agent questions and scope', async ({ page }, testInfo) => {
