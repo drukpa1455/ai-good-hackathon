@@ -495,6 +495,7 @@ class DataSFCompiler:
                 source_cutoff_at=source_cutoff.isoformat(),
                 compiler_version=self.compiler_version,
                 mock=False,
+                data_status="live",
             ),
             site=graph_site,
             focus="overview",

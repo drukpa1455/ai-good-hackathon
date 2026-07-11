@@ -4,7 +4,7 @@ import hashlib
 import json
 import re
 
-from .contracts import AgentContextPacket, ContextGraph, EntityObject, LiteralObject
+from .contracts import AgentContextPacket, ContextGraph, EntityObject, LiteralObject, SiteSummary
 from .repository import ContextRepository, NotFoundError
 
 DEMO_SITE_ALIASES_BY_APN = {
@@ -25,28 +25,24 @@ class FullGraphContextProvider:
     def __init__(self, repository: ContextRepository, max_bytes: int = 65_536) -> None:
         self._repository = repository
         self._max_bytes = max_bytes
-        self._aliases = _site_aliases(repository)
+        self._resolver = SiteResolver(repository.list_sites())
 
     def retrieve(self, site: str, focus: str, question: str) -> AgentContextPacket:
-        parcel_id = self._resolve_site(site)
+        parcel_id = self._resolver.resolve(site)
         context = self._repository.get_context(parcel_id, focus)
-        packet = _render_packet(context, question.strip())
-        encoded = packet.encode("utf-8")
-        if len(encoded) > self._max_bytes:
-            raise ContextTooLargeError(
-                f"Context packet is {len(encoded)} bytes; limit is {self._max_bytes}"
-            )
-        return AgentContextPacket(
-            context_packet=packet,
-            graph_release_id=self._repository.release_id,
-            mock=self._repository.mock,
-            packet_sha256=hashlib.sha256(encoded).hexdigest(),
-        )
+        return build_context_packet(context, question, self._max_bytes)
 
-    def _resolve_site(self, value: str) -> str:
+
+class SiteResolver:
+    def __init__(self, sites: list[SiteSummary]) -> None:
+        self._aliases = _site_aliases(sites)
+
+    def resolve(self, value: str, *, allow_exact_apn: bool = False) -> str:
         normalized = _normalize(value)
         if not normalized:
             raise NotFoundError("Site is required")
+        if allow_exact_apn and re.fullmatch(r"[0-9]{7}", normalized):
+            return normalized
         matches = {
             parcel_id
             for alias, parcel_id in self._aliases.items()
@@ -57,9 +53,8 @@ class FullGraphContextProvider:
         return matches.pop()
 
 
-def _site_aliases(repository: ContextRepository) -> dict[str, str]:
+def _site_aliases(sites: list[SiteSummary]) -> dict[str, str]:
     aliases: dict[str, str] = {}
-    sites = repository.list_sites()
     parcel_ids = {site.parcel_id for site in sites}
     for site in sites:
         for value in (site.parcel_id, site.name, site.address):
@@ -69,6 +64,26 @@ def _site_aliases(repository: ContextRepository) -> dict[str, str]:
             for value in values:
                 _add_alias(aliases, value, parcel_id)
     return aliases
+
+
+def build_context_packet(
+    context: ContextGraph,
+    question: str,
+    max_bytes: int = 65_536,
+) -> AgentContextPacket:
+    packet = _render_packet(context, question.strip())
+    encoded = packet.encode("utf-8")
+    if len(encoded) > max_bytes:
+        raise ContextTooLargeError(
+            f"Context packet is {len(encoded)} bytes; limit is {max_bytes}"
+        )
+    return AgentContextPacket(
+        context_packet=packet,
+        graph_release_id=context.release.id,
+        mock=context.release.mock,
+        data_status=context.release.data_status,
+        packet_sha256=hashlib.sha256(encoded).hexdigest(),
+    )
 
 
 def _add_alias(aliases: dict[str, str], value: str, parcel_id: str) -> None:
@@ -98,11 +113,11 @@ def _extends_numbered_address(value: str, alias: str) -> bool:
 
 def _render_packet(context: ContextGraph, question: str) -> str:
     entities = {entity.id: entity for entity in context.entities}
-    data_status = (
-        "DATA STATUS: DETERMINISTIC DEMO FIXTURE — NOT LIVE OFFICIAL RECORDS"
-        if context.release.mock
-        else "DATA STATUS: LIVE DATASF PROJECTIONS — CHECK SOURCE DATES AND DIAGNOSTICS"
-    )
+    data_status = {
+        "fixture": "DATA STATUS: DETERMINISTIC DEMO FIXTURE — NOT LIVE OFFICIAL RECORDS",
+        "live": "DATA STATUS: LIVE DATASF PROJECTIONS — CHECK SOURCE DATES AND DIAGNOSTICS",
+        "stale": "DATA STATUS: STALE LIVE DATASF SNAPSHOT — REFRESH FAILED OR IS IN PROGRESS",
+    }[context.release.data_status]
     hash_label = (
         "Fixture projection SHA256 (not source artifact)"
         if context.release.mock

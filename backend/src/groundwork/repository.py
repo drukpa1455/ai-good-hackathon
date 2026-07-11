@@ -8,7 +8,6 @@ from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from .contracts import (
     FOCUS_VALUES,
-    ContextFocus,
     ContextGraph,
     EntityObject,
     EvidenceRecord,
@@ -121,7 +120,7 @@ class JsonReleaseRepository:
         context = self._contexts.get(parcel_id)
         if context is None:
             raise NotFoundError(f"No site with parcel id {parcel_id}")
-        return _filter_by_focus(context, focus)
+        return filter_by_focus(context, focus)
 
     def get_evidence(self, evidence_id: str) -> EvidenceRecord:
         record = self._evidence.get(evidence_id)
@@ -220,7 +219,9 @@ def _validate_context(
             raise ReleaseError(f"trust metric mismatch: {parcel_id}/{field}")
 
 
-def _filter_by_focus(context: ContextGraph, focus: ContextFocus) -> ContextGraph:
+def filter_by_focus(context: ContextGraph, focus: str) -> ContextGraph:
+    if focus not in FOCUS_VALUES:
+        raise InvalidFocusError(f"Unknown focus {focus}")
     if focus == "overview":
         return context
     assertions = [
