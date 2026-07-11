@@ -213,15 +213,16 @@ export function entityGlyphDataUri(kind: EntityKind, color: string): string {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
-/** Keep every symbol proportional to its degree-sized node. Cytoscape scales
- * the complete node with the camera, so a percentage avoids a second,
- * inconsistent fixed-size relationship between the node and its glyph. */
+/** Keep every symbol proportional to its degree-sized node. The dense parcel
+ * cell uses a smaller optical box than the single-path outer symbols.
+ * Cytoscape then scales each complete node with the camera. */
 export function entityGlyphBackground(kind: EntityKind, color: string) {
+  const size = kind === 'parcel' ? '58%' : '68%';
   return {
     'background-image': entityGlyphDataUri(kind, color),
     'background-fit': 'none',
-    'background-width': '68%',
-    'background-height': '68%',
+    'background-width': size,
+    'background-height': size,
     'background-position-x': '50%',
     'background-position-y': '50%',
     'background-image-opacity': 1,
