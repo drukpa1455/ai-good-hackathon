@@ -193,6 +193,20 @@ test.describe('accessibility and viewport acceptance', () => {
     await page.screenshot({ path: path.join(SHOTS, 'mobile-header.png') });
   });
 
+  test('mobile trust strip keeps diagnostics accessible without truncated metrics', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile', 'mobile only');
+    await page.goto('/sites/3956008');
+
+    await expect(page.locator('.truststrip > div')).toBeHidden();
+    const diagnostics = page.getByRole('button', { name: 'Diagnostics' });
+    await expect(diagnostics).toBeVisible();
+    await page.screenshot({ path: path.join(SHOTS, 'mobile-trust-strip.png') });
+
+    await diagnostics.click();
+    const panel = page.getByRole('dialog', { name: 'Trust diagnostics' });
+    await expect(panel.getByText('citation coverage')).toBeVisible();
+  });
+
   test('map attribution stays visible', async ({ page }, testInfo) => {
     await page.goto('/sites/3956008');
     if (testInfo.project.name === 'mobile') await page.getByRole('tab', { name: 'map' }).click();
