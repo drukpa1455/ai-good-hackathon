@@ -49,6 +49,15 @@ AGENT_AMBIGUITY_CONTRACT = (
     "an ambiguous identifier.",
 )
 AGENT_RETRY_CONTRACT = "call the Function exactly one more time with that APN."
+AGENT_RESPONSE_CONTRACT = (
+    "Answer first and keep the final response under 120 words.",
+    "Include only the requested facts and, when applicable, packet status, "
+    "a material date or diagnostic, and relevant packet citations.",
+    "Use at most four bullets; do not use tables, project-description dumps, "
+    "internal reasoning, raw tool output, or unused graph fields.",
+    "Finish required citations before optional context.",
+    "If space is tight, omit optional detail; never cut a sentence or URL.",
+)
 
 ROUTE_AMBIGUITY_CONTRACT = (
     "Match a canonical alias only when the entire normalized site identifier "
@@ -160,6 +169,9 @@ def _validate_agent_assets(errors: list[str]) -> None:
             errors.append(f"agent instructions are missing contract clause: {clause!r}")
     if AGENT_RETRY_CONTRACT not in " ".join(instructions.split()):
         errors.append("agent instructions are missing the one-retry contract")
+    for clause in AGENT_RESPONSE_CONTRACT:
+        if " ".join(clause.split()) not in " ".join(instructions.split()):
+            errors.append(f"agent instructions are missing response clause: {clause!r}")
 
     try:
         route = json.loads(AGENT_FUNCTION_ROUTE_PATH.read_text(encoding="utf-8"))
@@ -206,7 +218,7 @@ def main() -> int:
     print(
         f"Validated {len(RAG_DOCUMENTS)} methodology documents and "
         f"{len(rows)} evaluation rows across {len(COVERAGE_GROUPS)} coverage groups, and "
-        "the Agent ambiguity contract."
+        "the Agent instruction contracts."
     )
     return 0
 
