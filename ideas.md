@@ -1,18 +1,18 @@
 # AI for Social Good Hackathon — Idea Notes
 
-_Status: brainstorming only; no implementation repository chosen._
+_Status: brainstorming only; no final concept selected._
 
 ## Lead Idea: Reia Property Evidence Room
 
 Select a San Francisco parcel and build a proof-carrying diligence memo from official records:
 
-- assessor history and parcel characteristics
-- building permits and proposed changes
+- [assessor history and parcel characteristics](https://data.sfgov.org/Housing-and-Buildings/Assessor-Historical-Secured-Property-Tax-Rolls/wv5m-vpq2/about_data)
+- [building permits and proposed changes](https://data.sfgov.org/Housing-and-Buildings/Building-Permits/i98e-djp9/about_data)
 - zoning, land use, affordable-housing eligibility, and hazards
-- optional 2023 USGS LiDAR evidence for one small 3D area
+- optional [2023 USGS LiDAR](https://www.fisheries.noaa.gov/inport/item/73386) evidence for one small 3D area
 - explicit contradictions, stale claims, missing data, and source dates
 
-Deterministic tools own facts and comparisons. DigitalOcean Inference turns the evidence into a cited memo and refuses valuation, legal, safety, or buy/sell conclusions. DigitalOcean Evaluations test citations and numeric fidelity; App Platform can host the demo.
+Deterministic tools own facts and comparisons. [DigitalOcean Inference](https://docs.digitalocean.com/products/inference/) turns the evidence into a cited memo and refuses valuation, legal, safety, or buy/sell conclusions. Evaluations test citations and numeric fidelity; [App Platform](https://docs.digitalocean.com/products/app-platform/) can host the demo.
 
 Social-good framing: first-pass site diligence for community land trusts or affordable-housing organizations.
 
@@ -26,10 +26,10 @@ Social-good framing: first-pass site diligence for community land trusts or affo
 
 ## San Francisco 3D Sources
 
-- Best open analytical source: 2023 USGS classified LiDAR, 0.15 m nominal pulse spacing and 0.25 m DEM products.
-- Ready visual context: public Esri downtown 3D buildings, subject to Esri and Precision Light Works terms.
-- Google Photorealistic 3D Tiles require billing, attribution, and platform terms.
-- Aerometrex has commercial 2021 meshes; quote required.
+- Best open analytical source: [2023 USGS classified LiDAR](https://www.fisheries.noaa.gov/inport/item/73386), with 0.15 m nominal pulse spacing and 0.25 m DEM products.
+- Ready visual context: the public [Esri San Francisco 3D Buildings](https://www.arcgis.com/home/item.html?id=d3344ba99c3f4efaa909ccfbcc052ed5) scene layer, subject to Esri terms and Precision Light Works credit.
+- [Google Photorealistic 3D Tiles](https://developers.google.com/maps/documentation/tile/3d-tiles) require billing, attribution, and Google Maps Platform terms.
+- [Aerometrex](https://aerometrex.com/models/san-francisco-3d-model-2cm/) offers commercial 2021 meshes; quote and license required.
 
 Use 3D only as a stretch for one parcel or block, not as the critical path.
 
