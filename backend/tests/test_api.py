@@ -36,6 +36,9 @@ def test_health_and_runtime_config_are_deployment_readbacks(client: TestClient) 
     runtime = client.get("/api/runtime-config").json()
     assert runtime["data_mode"] == "api"
     assert runtime["agent"]["enabled"] is False
+    assert runtime["agent"]["primary_color"] == "#5b4bc4"
+    assert runtime["agent"]["secondary_color"] == "#1a1822"
+    assert runtime["agent"]["button_background_color"] == "#5b4bc4"
 
 
 def test_public_context_contract(client: TestClient) -> None:

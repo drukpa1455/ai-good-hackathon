@@ -13,9 +13,9 @@ const config: PublicRuntimeConfig = {
     chatbot_id: 'chatbot-id',
     name: 'Groundwork SF',
     starting_message: 'Ask about a demo site.',
-    primary_color: '#afa0ff',
-    secondary_color: '#111017',
-    button_background_color: '#afa0ff',
+    primary_color: '#5b4bc4',
+    secondary_color: '#1a1822',
+    button_background_color: '#5b4bc4',
   },
 };
 
@@ -39,9 +39,9 @@ describe('AgentWidget', () => {
       expect(script).toHaveAttribute('data-chatbot-id', 'chatbot-id');
       expect(script).toHaveAttribute('data-name', 'Groundwork SF');
       expect(script).toHaveAttribute('data-logo', '/static/chatbot/icons/default-agent.svg');
-      expect(script).toHaveAttribute('data-primary-color', '#afa0ff');
-      expect(script).toHaveAttribute('data-secondary-color', '#111017');
-      expect(script).toHaveAttribute('data-button-background-color', '#afa0ff');
+      expect(script).toHaveAttribute('data-primary-color', '#5b4bc4');
+      expect(script).toHaveAttribute('data-secondary-color', '#1a1822');
+      expect(script).toHaveAttribute('data-button-background-color', '#5b4bc4');
       expect(script).toHaveAttribute('data-starting-message', 'Ask about a demo site.');
     });
   });

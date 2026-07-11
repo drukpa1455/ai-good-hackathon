@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import cytoscape, { Core, ElementDefinition } from 'cytoscape';
 import type { ApiError, Assertion, ContextGraph as Ctx } from '../contracts';
+import { entityGlyphDataUri } from '../graph/entity-glyphs';
 import { KIND_META, KIND_ORDER, formatLiteral, kindColorResolved, tokenResolved } from '../kinds';
 
 const W = 980;
@@ -208,9 +209,19 @@ function cyStyles(): cytoscape.StylesheetStyle[] {
   ];
 
   for (const kind of Object.keys(KIND_META) as (keyof typeof KIND_META)[]) {
+    const color = kindColorResolved(kind);
     styles.push({
       selector: `node.kind-${kind}`,
-      style: { 'border-color': kindColorResolved(kind) },
+      style: {
+        'border-color': color,
+        'background-image': entityGlyphDataUri(kind, color),
+        'background-fit': 'contain',
+        'background-width': kind === 'parcel' ? '46%' : '52%',
+        'background-height': kind === 'parcel' ? '46%' : '52%',
+        'background-position-x': '50%',
+        'background-position-y': '50%',
+        'background-image-opacity': 1,
+      } as unknown as cytoscape.Css.Node,
     });
   }
   return styles;
@@ -305,6 +316,17 @@ export function ContextGraph({
     if (!host || !cy || typeof ResizeObserver === 'undefined') return;
     const observer = new ResizeObserver(() => cy.resize());
     observer.observe(host);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy || typeof MutationObserver === 'undefined') return;
+    const observer = new MutationObserver(() => cy.style(cyStyles()));
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
     return () => observer.disconnect();
   }, []);
 
