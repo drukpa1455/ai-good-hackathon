@@ -43,6 +43,28 @@ Each component earns its place:
 
 DigitalOcean documents Managed PostgreSQL integration with App Platform, S3-compatible Spaces, and Spaces-backed Knowledge Bases. ([PostgreSQL](https://docs.digitalocean.com/products/app-platform/how-to/manage-databases/), [Spaces](https://docs.digitalocean.com/products/spaces/reference/s3-compatibility/), [Knowledge Bases](https://docs.digitalocean.com/products/knowledge-bases/how-to/create/))
 
+## Stage 0: Restore grounded demo-site conversations
+
+One PR: `fix: resolve demo-site address variants`
+
+- Deterministically map common variants to the three canonical APNs:
+  - `300 Haro`, `300 De Haro` → `3956008`
+  - `1939 Market` → `3501006`
+  - `758 Pacific`, `772 Pacific`, `758/772 Pacific` → `0161014`
+- Keep vague or ambiguous identifiers rejected.
+- Give the Agent the canonical demo-site map.
+- Permit exactly one `not_found` retry using the uniquely matched APN.
+- Never claim a retry unless a second Function result exists.
+- Reduce Agent temperature to `0.1`.
+- Verify in a fresh conversation before promoting the configuration.
+
+Acceptance:
+
+- The reported `300 Haro` conversation succeeds with a Function trace.
+- All supported variants return the same graph packet as their APN.
+- Vague input such as `Pacific` remains `not_found`.
+- Answers disclose fixture status and cite packet URLs.
+
 ## Stage 1: Real DataSF graph compiler
 
 One PR: `feat: compile live datasf context graphs`
