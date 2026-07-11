@@ -422,10 +422,12 @@ class PostgresContextStore:
                     state.last_completed_at,
                     state.last_error_code
                 FROM unnest(%s::text[]) AS ids(parcel_id)
-                LEFT JOIN current_contexts AS current USING (parcel_id)
+                LEFT JOIN current_contexts AS current
+                  ON current.parcel_id = ids.parcel_id
                 LEFT JOIN context_snapshots AS snapshots
                   ON snapshots.snapshot_sha256 = current.snapshot_sha256
-                LEFT JOIN refresh_state AS state USING (parcel_id)
+                LEFT JOIN refresh_state AS state
+                  ON state.parcel_id = ids.parcel_id
                 """,
                 (list(parcel_ids),),
             )
