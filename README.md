@@ -4,9 +4,11 @@ Public concept and build workspace for **AI for Social Good: Hack with MLH & Dig
 
 ## Status
 
-The local demo is runnable. It serves three explicitly labeled deterministic
-site-context fixtures through a React evidence explorer and a FastAPI API. The
-demo is not yet deployed and no DigitalOcean resource has been provisioned.
+Groundwork SF is deployed on DigitalOcean App Platform. Its three featured
+sites are compiled from bounded live DataSF queries, persisted in Managed
+PostgreSQL, and backed by immutable private Spaces artifacts. The verified
+fixture release remains the explicit fallback when live acquisition is
+disabled or unavailable.
 
 The current lead is an independently branded San Francisco community site
 context graph. Deterministic code owns graph facts, evidence identity, dates,
@@ -15,6 +17,8 @@ becoming the source of facts or making legal, safety, valuation, or buy/sell
 claims.
 
 See [ideas.md](ideas.md) for the current shortlist and go/no-go criteria, [resources.md](resources.md) for links collected at the kickoff, and the [frontend design handoff](docs/frontend-design-handoff.md) for the mock-first UI contract.
+The [Devpost submission](docs/devpost.md) preserves the public project story
+and demo script.
 
 ## Local demo
 
@@ -90,24 +94,27 @@ Candidate 3D sources:
 - [Google Photorealistic 3D Tiles](https://developers.google.com/maps/documentation/tile/3d-tiles)
 - [Aerometrex San Francisco 2 cm model](https://aerometrex.com/models/san-francisco-3d-model-2cm/)
 
-## Platform direction
+## DigitalOcean deployment
 
-The judge-ready DigitalOcean path is:
+The implemented DigitalOcean stack is:
 
-1. deploy this single React/FastAPI image through [DigitalOcean App Platform](https://docs.digitalocean.com/products/app-platform/)
-2. create a secure DigitalOcean Function that requests a bounded graph packet
-3. connect a `glm-5.2` Agent Platform agent to that Function
-4. embed DigitalOcean's generated streaming widget using runtime configuration
-5. optionally attach a methodology-only Knowledge Base after the critical demo path is verified
+1. a React/FastAPI image on [App Platform](https://docs.digitalocean.com/products/app-platform/)
+2. Managed PostgreSQL for durable current graph snapshots
+3. private Spaces buckets for content-addressed source projections and
+   methodology documents
+4. a secure Function that retrieves one bounded, hash-verified graph packet
+5. a `glm-5.2` Agent Platform agent and generated streaming widget
+6. a methodology-only Knowledge Base backed by Managed OpenSearch for the
+   evaluated replacement agent
 
-The fixture release is the current source of truth. A DataSF compiler,
-PostgreSQL/PostGIS/pgvector, and broader managed RAG are productization steps
-behind the stable public API and agent-tool contracts, not prerequisites for
-the first demo.
+Deterministic code remains the fact owner. Live DataSF acquisition, durable
+storage, Function retrieval, and model explanation stay separated behind the
+same public API and agent-tool contracts. `LIVE_DATA_ENABLED=false` is the
+exact rollback to the verified fixture release.
 
 The tracked [App Platform baseline](.do/app.yaml), [secure Function](functions/),
-and [approval-bounded demo lease](ops/digitalocean-demo-lease.md) are ready for
-the next deployment phase. They create no cloud resources by themselves.
+and [approval-bounded demo lease](ops/digitalocean-demo-lease.md) describe the
+reproducible configuration and own current live-state and teardown claims.
 
 No paid API, cloud resource, or deployment is authorized merely by its mention here.
 
