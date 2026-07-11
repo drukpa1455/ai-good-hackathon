@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "release_id": "mock-release-0001",
+  "mock": true,
+  "created_at": "2026-07-10T12:00:00-07:00",
+  "source_cutoff_at": "2026-07-10T12:00:00-07:00",
+  "sites_file": "sites.json",
+  "contexts": {
+    "3501006": "contexts/3501006.json",
+    "3956008": "contexts/3956008.json",
+    "0161014": "contexts/0161014.json"
+  },
+  "files": {
+    "sites.json": "2fe31d6a079e987ee0cacb631c1ae96015565d4e47ee58c8419f3d80de1535e6",
+    "contexts/0161014.json": "047cc31a139488315ca3ec082f24c68fecc2aa29a7464993f9286a80813b4ab3",
+    "contexts/3501006.json": "687556ca13ba3d7afeaa4469df4126606bdc030a7ab99126483ca5b6eb49dd77",
+    "contexts/3956008.json": "11ab88dd98c0772cba0402cf6147febc83235f3b5edfe515456bd6eba789275e"
+  }
+}

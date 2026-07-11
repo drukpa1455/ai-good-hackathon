@@ -81,6 +81,7 @@ describe('App routing and shell', () => {
     const drawer = await screen.findByRole('dialog', { name: /evidence record/i });
     expect(within(drawer).getByText(/San Francisco Development Pipeline/i)).toBeInTheDocument();
     expect(within(drawer).getByText(/record key: PL-2026Q1-3956008/i)).toBeInTheDocument();
+    expect(within(drawer).getByText(/fixture projection sha256/i)).toBeInTheDocument();
   });
 
   it('Escape closes the evidence drawer', async () => {

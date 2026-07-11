@@ -368,10 +368,10 @@
       "record_key": "3501006",
       "source_url": "https://data.sfgov.org/d/acdm-wktn",
       "record_url": null,
-      "license_id": "PDDL-1.0",
+      "license_id": "demo-fixture",
       "retrieved_at": "2026-07-10T11:42:00-07:00",
       "source_updated_at": "2026-07-08T04:10:00-07:00",
-      "artifact_sha256": "mockevacdmwk9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "artifact_sha256": "3067263cc043a3d747276f97bcda5c0a92a5c1d1bc54603f7cfd41def48611ee",
       "scope_note": "Active parcel row; geometry simplified for the mock fixture.",
       "parcel_ids": [
         "3501006"
@@ -394,10 +394,10 @@
       "record_key": "PL-2026Q1-3501006",
       "source_url": "https://data.sfgov.org/d/6jgi-cpb4",
       "record_url": null,
-      "license_id": "PDDL-1.0",
+      "license_id": "demo-fixture",
       "retrieved_at": "2026-07-10T11:42:00-07:00",
       "source_updated_at": "2026-06-30T02:00:00-07:00",
-      "artifact_sha256": "mockev6jgicp9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "artifact_sha256": "7614f658cf048d8de098507e3c2cc9b54b49bef432d27396ac24e2ab9d957aa1",
       "scope_note": null,
       "parcel_ids": [
         "3501006"
@@ -426,10 +426,10 @@
       "record_key": "201802284074",
       "source_url": "https://data.sfgov.org/d/i98e-djp9",
       "record_url": null,
-      "license_id": "PDDL-1.0",
+      "license_id": "demo-fixture",
       "retrieved_at": "2026-07-10T11:42:00-07:00",
       "source_updated_at": "2026-07-05T03:30:00-07:00",
-      "artifact_sha256": "mockevi98edj9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "artifact_sha256": "bdd10fb870297cbd1aa79d69dc69c97fb0fb5d62702f453c7be49729c0efddd8",
       "scope_note": null,
       "parcel_ids": [
         "3501006"
@@ -454,10 +454,10 @@
       "record_key": "3501006:2016-2024",
       "source_url": "https://data.sfgov.org/d/wv5m-vpq2",
       "record_url": null,
-      "license_id": "PDDL-1.0",
+      "license_id": "demo-fixture",
       "retrieved_at": "2026-07-10T11:42:00-07:00",
       "source_updated_at": "2025-09-14T02:00:00-07:00",
-      "artifact_sha256": "mockevwv5mvp9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "artifact_sha256": "60938de0a32013805bbb803c1184bab7ee3a0a1c5ce6a915f47e5e76d4128dde",
       "scope_note": "Series grouped from nine annual roll rows.",
       "parcel_ids": [
         "3501006"
@@ -481,10 +481,10 @@
       "record_key": "ahbp:3501006",
       "source_url": "https://data.sfgov.org/d/fizh-zaxt",
       "record_url": null,
-      "license_id": "PDDL-1.0",
+      "license_id": "demo-fixture",
       "retrieved_at": "2026-07-10T11:42:00-07:00",
       "source_updated_at": "2015-10-02T00:00:00-07:00",
-      "artifact_sha256": "mockevfizhza9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "artifact_sha256": "be0996493a5b45cc52b0a1d80a2ee888a74bc2b161e0a2dd07315257d6c9eb42",
       "scope_note": "Exact-parcel query returned no row. The program layer is a 2015 vintage; absence here is not evidence of ineligibility.",
       "parcel_ids": [
         "3501006"
@@ -505,10 +505,10 @@
       "record_key": "flood:3501006",
       "source_url": "https://data.sfgov.org/d/jzu3-4yxp",
       "record_url": null,
-      "license_id": "PDDL-1.0",
+      "license_id": "demo-fixture",
       "retrieved_at": "2026-07-10T11:42:00-07:00",
       "source_updated_at": "2022-07-19T00:00:00-07:00",
-      "artifact_sha256": "mockevjzu34y9c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "artifact_sha256": "cd3afcbdac64c47128cd8f52161fa83956c6c4ee612a161977cc9b102c8231f1",
       "scope_note": "Mock graph records only that the parcel was evaluated against the July 2022 layer. No current flood-risk conclusion is asserted.",
       "parcel_ids": [
         "3501006"
@@ -530,10 +530,10 @@
       "record_key": "311:3501006:150m:90d",
       "source_url": "https://data.sfgov.org/d/vw6y-z8j6",
       "record_url": null,
-      "license_id": "PDDL-1.0",
+      "license_id": "demo-fixture",
       "retrieved_at": "2026-07-10T11:42:00-07:00",
       "source_updated_at": "2026-07-09T05:00:00-07:00",
-      "artifact_sha256": "mockevvw6yz89c41e2b7f05a8d3612ab44cd90ef7712aa348bd1c25e6f80",
+      "artifact_sha256": "1131b58a0bd532e9385d498cb67440ebbdb829fc769b6a5e16a5e524d815953e",
       "scope_note": "Proximity aggregate — describes the surrounding block, not this parcel.",
       "parcel_ids": [
         "3501006"
@@ -602,12 +602,12 @@
     "coverage_gap_count": 1,
     "proximity_only_count": 1,
     "latest_agent_evaluation": {
-      "status": "passed",
-      "evaluated_at": "2026-07-10T09:30:00-07:00",
-      "graph_release_id": "mock-release-0001",
-      "agent_config_sha256": "mockagentcfg41d2c9887ab34f0e6d5512c3a9b8e7f60d41",
-      "passed_cases": 11,
-      "total_cases": 12
+      "status": "not_run",
+      "evaluated_at": null,
+      "graph_release_id": null,
+      "agent_config_sha256": null,
+      "passed_cases": 0,
+      "total_cases": 0
     }
   }
 }

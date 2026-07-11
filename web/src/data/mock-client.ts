@@ -11,11 +11,11 @@ import { isContextFocus } from '../contracts';
 import type { ContextClient } from './client';
 
 // The ONLY module allowed to import fixtures.
-import sitesJson from '../mocks/sites.json';
+import sitesJson from '../../../data/releases/demo-v1/sites.json';
 import runtimeJson from '../mocks/runtime-config.json';
-import ctx3956008 from '../mocks/context-3956008.json';
-import ctx3501006 from '../mocks/context-3501006.json';
-import ctx0161014 from '../mocks/context-0161014.json';
+import ctx3956008 from '../../../data/releases/demo-v1/contexts/3956008.json';
+import ctx3501006 from '../../../data/releases/demo-v1/contexts/3501006.json';
+import ctx0161014 from '../../../data/releases/demo-v1/contexts/0161014.json';
 
 export type MockState =
   | 'ready'

@@ -462,7 +462,8 @@ Use:
 ```
 
 When `release.mock` is true, render a persistent but unobtrusive `MOCK DATA`
-badge. Production API mode must never display it.
+badge, including when an API serves the deterministic demo release. Remove it
+only after an API returns `release.mock=false`.
 
 ### Site fixture headlines
 
@@ -674,7 +675,8 @@ When the backend OpenAPI document is ready:
 4. Run the same component and Playwright suite once with `VITE_DATA_MODE=mock`
    and once with `VITE_DATA_MODE=api`.
 5. Keep mock mode for deterministic tests and design review.
-6. Remove the mock badge only in API mode; do not delete the fixtures.
+6. Keep the mock badge whenever `release.mock=true`; do not delete the
+   fixtures.
 
 The frontend agent should hand back:
 

@@ -4,11 +4,45 @@ Public concept and build workspace for **AI for Social Good: Hack with MLH & Dig
 
 ## Status
 
-Concept selection only. No final product, application, model, or third-party dataset has been published here.
+The local demo is runnable. It serves three explicitly labeled deterministic
+site-context fixtures through a React evidence explorer and a FastAPI API. The
+demo is not yet deployed and no DigitalOcean resource has been provisioned.
 
-The current lead is an independently branded San Francisco community site context graph: deterministic tools reconcile official parcel, assessor, permit, planning, hazard, and neighborhood evidence into a source-backed graph; [DigitalOcean Inference](https://docs.digitalocean.com/products/inference/) explains bounded context subgraphs without becoming the source of facts or making legal, safety, valuation, or buy/sell claims.
+The current lead is an independently branded San Francisco community site
+context graph. Deterministic code owns graph facts, evidence identity, dates,
+and limits; a DigitalOcean agent will explain a bounded graph packet without
+becoming the source of facts or making legal, safety, valuation, or buy/sell
+claims.
 
 See [ideas.md](ideas.md) for the current shortlist and go/no-go criteria, [resources.md](resources.md) for links collected at the kickoff, and the [frontend design handoff](docs/frontend-design-handoff.md) for the mock-first UI contract.
+
+## Local demo
+
+The frontend requires Node 22; the API requires Python 3.13 through `uv`.
+
+```bash
+npm --prefix web ci
+uv sync --project backend --frozen
+VITE_DATA_MODE=api npm --prefix web run build
+GIT_SHA=local FUNCTION_TO_APP_TOKEN=local-only-token \
+  uv run --project backend uvicorn groundwork.api:app --host 127.0.0.1 --port 8000
+```
+
+Open `http://127.0.0.1:8000`. The public API has four stable routes:
+`/api/runtime-config`, `/api/sites`, `/api/sites/{parcel_id}/context`, and
+`/api/evidence/{evidence_id}`. The protected agent route is
+`POST /internal/agent/context` with a separate Function-to-app bearer token.
+
+Run the local gates with:
+
+```bash
+uv run --project backend ruff check backend
+uv run --project backend pytest
+npm --prefix web run lint
+npm --prefix web run typecheck
+npm --prefix web test -- --run
+npm --prefix web run e2e
+```
 
 ## Candidate Public Sources
 
@@ -29,16 +63,20 @@ Candidate 3D sources:
 - [Google Photorealistic 3D Tiles](https://developers.google.com/maps/documentation/tile/3d-tiles)
 - [Aerometrex San Francisco 2 cm model](https://aerometrex.com/models/san-francisco-3d-model-2cm/)
 
-## Platform Direction
+## Platform direction
 
-The intended DigitalOcean demo path is:
+The judge-ready DigitalOcean path is:
 
-1. preload bounded DataSF source snapshots into a canonical context graph
-2. traverse a property-centered context subgraph deterministically
-3. combine graph retrieval with managed knowledge-base retrieval
-4. let a DigitalOcean agent explain the combined context with source citations
-5. evaluate grounding, citation coverage, numeric fidelity, and refusal behavior
-6. deploy the interactive map, graph, evidence viewer, and chat through [DigitalOcean App Platform](https://docs.digitalocean.com/products/app-platform/)
+1. deploy this single React/FastAPI image through [DigitalOcean App Platform](https://docs.digitalocean.com/products/app-platform/)
+2. create a secure DigitalOcean Function that requests a bounded graph packet
+3. connect a `glm-5.2` Agent Platform agent to that Function
+4. embed DigitalOcean's generated streaming widget using runtime configuration
+5. optionally attach a methodology-only Knowledge Base after the critical demo path is verified
+
+The fixture release is the current source of truth. A DataSF compiler,
+PostgreSQL/PostGIS/pgvector, and broader managed RAG are productization steps
+behind the stable public API and agent-tool contracts, not prerequisites for
+the first demo.
 
 No paid API, cloud resource, or deployment is authorized merely by its mention here.
 
