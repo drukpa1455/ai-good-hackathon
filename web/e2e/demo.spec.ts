@@ -254,9 +254,47 @@ test.describe('accessibility and viewport acceptance', () => {
     await expect(panel.getByText('citation coverage')).toBeVisible();
   });
 
-  test('map attribution stays visible', async ({ page }, testInfo) => {
+  test('map attribution stays visible and the mobile map does not overflow', async ({ page }, testInfo) => {
     await page.goto('/sites/3956008');
     if (testInfo.project.name === 'mobile') await page.getByRole('tab', { name: 'map' }).click();
     await expect(page.getByText(/OpenStreetMap/).first()).toBeVisible();
+    await expect(page.getByText(/CARTO/).first()).toBeVisible();
+    if (testInfo.project.name === 'mobile') {
+      const dimensions = await page.evaluate(() => ({
+        viewport: window.innerWidth,
+        content: document.documentElement.scrollWidth,
+      }));
+      expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
+    }
+  });
+
+  test('theme toggle switches the existing map between CARTO styles', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'desktop source transition coverage');
+    const requestedStyles: string[] = [];
+    await page.route(/https:\/\/[a-d]\.basemaps\.cartocdn\.com\//, async (route) => {
+      requestedStyles.push(route.request().url());
+      await route.fulfill({
+        status: 200,
+        contentType: 'image/png',
+        body: Buffer.from(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M/wHwAFgAI/5R5O9AAAAABJRU5ErkJggg==',
+          'base64',
+        ),
+      });
+    });
+
+    await page.goto('/sites/3956008');
+    await expect.poll(() => requestedStyles.some((url) => url.includes('/dark_all/'))).toBe(true);
+    const map = page.locator('.maplibregl-map');
+    await map.evaluate((element) => {
+      element.setAttribute('data-map-instance', 'original');
+    });
+
+    await page.getByRole('button', { name: 'Light' }).click();
+
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect.poll(() => requestedStyles.some((url) => url.includes('/light_all/'))).toBe(true);
+    await expect(map).toHaveAttribute('data-map-instance', 'original');
+    await expect(page.getByText(/parcel 3956008 centered at/)).toBeVisible();
   });
 });

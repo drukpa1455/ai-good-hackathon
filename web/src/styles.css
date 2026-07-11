@@ -402,6 +402,13 @@ button {
   position: absolute;
   inset: 0;
 }
+.mapcard .maplibregl-ctrl-attrib {
+  color: var(--fnt);
+  background: color-mix(in srgb, var(--srf) 92%, transparent);
+}
+.mapcard .maplibregl-ctrl-attrib a {
+  color: inherit;
+}
 .mapnote {
   margin: 8px 2px 0;
   font-size: 10.5px;

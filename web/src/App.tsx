@@ -291,13 +291,16 @@ function SiteRoute() {
           </div>
         </>
       }
-      map={
+      renderMap={(theme) => (
         <ParcelMap
+          theme={theme}
           site={ctx?.site ?? null}
           loading={loading}
-          onSelectParcel={() => ctx && selectNode(ctx.entities.find((e) => e.kind === 'parcel')?.id ?? null)}
+          onSelectParcel={() =>
+            ctx && selectNode(ctx.entities.find((e) => e.kind === 'parcel')?.id ?? null)
+          }
         />
-      }
+      )}
       inspector={
         <Inspector
           ctx={ctx}

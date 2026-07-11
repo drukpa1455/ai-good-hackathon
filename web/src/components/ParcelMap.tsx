@@ -2,7 +2,25 @@ import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { SiteSummary } from '../contracts';
-import { ACTIVE_TILE_SOURCE } from '../map/tiles';
+import { tileSourceForTheme } from '../map/tiles';
+import type { Theme } from '../theme';
+
+const PARCEL_COLOR: Record<Theme, string> = {
+  dark: '#afa0ff',
+  light: '#5b4bc4',
+};
+
+function applyTheme(map: maplibregl.Map, theme: Theme) {
+  const tileSource = tileSourceForTheme(theme);
+  const basemap = map.getSource('basemap') as maplibregl.RasterTileSource | undefined;
+  basemap?.setTiles(tileSource.tiles);
+  if (map.getLayer('parcel-fill')) {
+    map.setPaintProperty('parcel-fill', 'fill-color', PARCEL_COLOR[theme]);
+  }
+  if (map.getLayer('parcel-line')) {
+    map.setPaintProperty('parcel-line', 'line-color', PARCEL_COLOR[theme]);
+  }
+}
 
 function bboxOf(site: SiteSummary): [[number, number], [number, number]] {
   if (site.geometry.type === 'Polygon') {
@@ -34,22 +52,27 @@ function bboxOf(site: SiteSummary): [[number, number], [number, number]] {
  * fail, geometry/controls/attribution stay on a neutral canvas. Fits bounds
  * on site change only — never recenters after user interaction. */
 export function ParcelMap({
+  theme,
   site,
   loading,
   onSelectParcel,
 }: {
+  theme: Theme;
   site: SiteSummary | null;
   loading: boolean;
   onSelectParcel: () => void;
 }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
   const selectRef = useRef(onSelectParcel);
   selectRef.current = onSelectParcel;
   const [tilesFailed, setTilesFailed] = useState(false);
 
   useEffect(() => {
     if (!hostRef.current || mapRef.current) return;
+    const tileSource = tileSourceForTheme(themeRef.current);
     const map = new maplibregl.Map({
       container: hostRef.current,
       style: {
@@ -57,10 +80,10 @@ export function ParcelMap({
         sources: {
           basemap: {
             type: 'raster',
-            tiles: ACTIVE_TILE_SOURCE.tiles,
-            tileSize: ACTIVE_TILE_SOURCE.tileSize,
-            attribution: ACTIVE_TILE_SOURCE.attribution,
-            maxzoom: ACTIVE_TILE_SOURCE.maxzoom,
+            tiles: tileSource.tiles,
+            tileSize: tileSource.tileSize,
+            attribution: tileSource.attribution,
+            maxzoom: tileSource.maxzoom,
           },
         },
         layers: [{ id: 'basemap', type: 'raster', source: 'basemap' }],
@@ -79,15 +102,16 @@ export function ParcelMap({
         id: 'parcel-fill',
         type: 'fill',
         source: 'parcel',
-        paint: { 'fill-color': '#afa0ff', 'fill-opacity': 0.18 },
+        paint: { 'fill-color': PARCEL_COLOR[themeRef.current], 'fill-opacity': 0.16 },
       });
       map.addLayer({
         id: 'parcel-line',
         type: 'line',
         source: 'parcel',
-        paint: { 'line-color': '#afa0ff', 'line-width': 2.5 },
+        paint: { 'line-color': PARCEL_COLOR[themeRef.current], 'line-width': 2.5 },
       });
       map.on('click', 'parcel-fill', () => selectRef.current());
+      applyTheme(map, themeRef.current);
       syncSite();
     });
     mapRef.current = map;
@@ -97,6 +121,14 @@ export function ParcelMap({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    applyTheme(map, theme);
+    setTilesFailed(false);
+  }, [theme]);
 
   const syncSite = () => {
     const map = mapRef.current;

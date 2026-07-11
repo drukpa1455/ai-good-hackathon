@@ -1,8 +1,8 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import type { ReleaseSummary } from '../contracts';
+import type { Theme } from '../theme';
 import { MockDataBadge } from './MockDataBadge';
 
-type Theme = 'dark' | 'light';
 type MobileTab = 'graph' | 'map' | 'evidence';
 
 function useTheme(): [Theme, () => void] {
@@ -26,7 +26,7 @@ export function AppShell({
   tab,
   mobileBars,
   rail,
-  map,
+  renderMap,
   inspector,
   graph,
   trust,
@@ -39,7 +39,7 @@ export function AppShell({
   tab: MobileTab;
   mobileBars: ReactNode;
   rail: ReactNode;
-  map: ReactNode;
+  renderMap: (theme: Theme) => ReactNode;
   inspector: ReactNode;
   graph: ReactNode;
   trust: ReactNode;
@@ -152,7 +152,7 @@ export function AppShell({
               {inspector}
             </section>
             <section className="mapcorner" aria-label="Parcel map">
-              {map}
+              {renderMap(theme)}
             </section>
           </div>
           {trust}

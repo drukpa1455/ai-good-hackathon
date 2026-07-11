@@ -540,9 +540,11 @@ site, not an empty site list. Tests must cover every state.
 ## Map Contract
 
 - Render parcel geometry from `SiteSummary.geometry`.
-- Use MapLibre with the official OpenStreetMap raster endpoint only for
-  interactive, on-screen tiles.
-- Keep visible `© OpenStreetMap contributors` attribution.
+- Use MapLibre with CARTO's OpenStreetMap-backed `dark_all` and `light_all`
+  raster styles for interactive, on-screen tiles.
+- Switch the existing raster source with the app theme without recreating the
+  map or resetting its camera.
+- Keep visible `© OpenStreetMap · © CARTO` attribution.
 - Do not prefetch or offer offline tiles.
 - Keep the tile source configurable in one module.
 - When tiles fail, retain parcel geometry, controls, selection, and attribution

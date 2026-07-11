@@ -1,6 +1,7 @@
 // Tile source configuration lives in exactly one module (map contract).
-// Interactive on-screen tiles only; no prefetch, no offline bundling.
-// The official OpenStreetMap raster endpoint requires visible attribution.
+// Interactive on-screen tiles only; no prefetch or offline bundling.
+
+import type { Theme } from '../theme';
 
 export interface TileSource {
   tiles: string[];
@@ -9,11 +10,27 @@ export interface TileSource {
   maxzoom: number;
 }
 
-export const OSM_RASTER: TileSource = {
-  tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-  tileSize: 256,
-  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  maxzoom: 19,
+const CARTO_ATTRIBUTION =
+  '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · ' +
+  '© <a href="https://carto.com/attributions">CARTO</a>';
+
+function cartoRaster(style: 'dark_all' | 'light_all'): TileSource {
+  return {
+    tiles: ['a', 'b', 'c', 'd'].map(
+      (subdomain) =>
+        `https://${subdomain}.basemaps.cartocdn.com/${style}/{z}/{x}/{y}.png`,
+    ),
+    tileSize: 256,
+    attribution: CARTO_ATTRIBUTION,
+    maxzoom: 19,
+  };
+}
+
+const CARTO_BY_THEME: Record<Theme, TileSource> = {
+  dark: cartoRaster('dark_all'),
+  light: cartoRaster('light_all'),
 };
 
-export const ACTIVE_TILE_SOURCE: TileSource = OSM_RASTER;
+export function tileSourceForTheme(theme: Theme): TileSource {
+  return CARTO_BY_THEME[theme];
+}
