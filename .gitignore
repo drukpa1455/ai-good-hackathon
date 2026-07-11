@@ -12,3 +12,7 @@ coverage/
 playwright-report/
 test-results/
 tmp/
+functions/.deployed/
+functions/.env
+functions/.env.*
+!functions/.env.example

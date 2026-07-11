@@ -1,0 +1,14 @@
+packages:
+  - name: context
+    functions:
+      - name: get_site_context
+        main: main
+        runtime: python:3.13
+        web: true
+        webSecure: "${FUNCTION_WEB_SECRET}"
+        limits:
+          memory: 256
+          timeout: 10000
+        environment:
+          APP_AGENT_CONTEXT_URL: "${APP_AGENT_CONTEXT_URL}"
+          FUNCTION_TO_APP_TOKEN: "${FUNCTION_TO_APP_TOKEN}"
