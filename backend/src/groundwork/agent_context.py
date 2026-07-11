@@ -98,9 +98,19 @@ def _extends_numbered_address(value: str, alias: str) -> bool:
 
 def _render_packet(context: ContextGraph, question: str) -> str:
     entities = {entity.id: entity for entity in context.entities}
+    data_status = (
+        "DATA STATUS: DETERMINISTIC DEMO FIXTURE — NOT LIVE OFFICIAL RECORDS"
+        if context.release.mock
+        else "DATA STATUS: LIVE DATASF PROJECTIONS — CHECK SOURCE DATES AND DIAGNOSTICS"
+    )
+    hash_label = (
+        "Fixture projection SHA256 (not source artifact)"
+        if context.release.mock
+        else "DataSF projection SHA256"
+    )
     lines = [
         "GROUNDWORK SF CONTEXT PACKET",
-        "DATA STATUS: DETERMINISTIC DEMO FIXTURE — NOT LIVE OFFICIAL RECORDS",
+        data_status,
         f"Graph release: {context.release.id}",
         f"Source cutoff: {context.release.source_cutoff_at}",
         f"Site: {context.site.name} | APN {context.site.parcel_id} | {context.site.address}",
@@ -160,7 +170,7 @@ def _render_packet(context: ContextGraph, question: str) -> str:
                 f"  Retrieved: {record.retrieved_at} | Source updated: "
                 f"{record.source_updated_at or 'unknown'}",
                 f"  License: {record.license_id}",
-                f"  Fixture projection SHA256 (not source artifact): {record.artifact_sha256}",
+                f"  {hash_label}: {record.artifact_sha256}",
                 f"  Scope: {record.scope_note or 'none'}",
                 f"  Fields: {fields}",
             )
