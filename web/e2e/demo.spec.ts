@@ -173,6 +173,26 @@ test.describe('accessibility and viewport acceptance', () => {
     await expect(page.getByRole('region', { name: 'Context graph' })).toBeVisible();
   });
 
+  test('mobile header keeps mock disclosure and controls in the viewport', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile', 'mobile only');
+    await page.goto('/sites/3956008');
+
+    const viewport = page.viewportSize();
+    expect(viewport).not.toBeNull();
+    for (const locator of [
+      page.getByText('Mock data').first(),
+      page.getByRole('button', { name: /^(Light|Dark)$/ }),
+      page.getByRole('button', { name: 'How this works' }),
+    ]) {
+      await expect(locator).toBeVisible();
+      const box = await locator.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.x).toBeGreaterThanOrEqual(0);
+      expect(box!.x + box!.width).toBeLessThanOrEqual(viewport!.width);
+    }
+    await page.screenshot({ path: path.join(SHOTS, 'mobile-header.png') });
+  });
+
   test('map attribution stays visible', async ({ page }, testInfo) => {
     await page.goto('/sites/3956008');
     if (testInfo.project.name === 'mobile') await page.getByRole('tab', { name: 'map' }).click();
