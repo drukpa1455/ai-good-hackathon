@@ -229,7 +229,8 @@ cataloged in [docs/sources.md](docs/sources.md).
 Read the public
 [evidence-first Graph RAG tutorial](docs/writing/evidence-first-graph-rag-on-digitalocean.md),
 the shorter [24-hour engineering case study](docs/writing/groundwork-digitalocean-case-study.md),
-and the [code-backed roadmap for future DigitalOcean pieces](docs/writing/README.md).
+the [code-backed roadmap for future DigitalOcean pieces](docs/writing/README.md),
+and the [ready-to-publish LinkedIn launch package](docs/linkedin-post.md).
 
 ## Project status
 

@@ -1,113 +1,97 @@
-# Groundwork SF LinkedIn Package
+# Groundwork SF LinkedIn Launch
 
-This package promotes the public hackathon project and its technical-writing
-collection. Link to tracked public pieces; never link to private branches or
-imply official DigitalOcean publication.
+Everything here is ready to publish. The application itself is archived; the
+repository and deterministic demo remain public.
 
-## Recommended Launch Post
+## Upload
 
-We built Groundwork SF in 24 hours because public data should be easier to use
-without becoming easier to misrepresent.
+- **Document:** [groundwork-sf-carousel.pdf](assets/linkedin/groundwork-sf-carousel.pdf)
+- **LinkedIn title:** `Groundwork SF — Evidence-First Civic AI`
+- **Post copy:** use the text below verbatim, then replace the organization
+  names with LinkedIn mentions if the composer resolves them.
 
-Community housing teams often have to piece together parcels, development
+## Post copy
+
+We built Groundwork SF in 24 hours to answer one question:
+
+Can AI make public data easier to use without making it easier to
+misrepresent?
+
+Community housing research often means reconciling parcels, development
 projects, permits, assessor history, housing programs, hazard maps, and nearby
-civic reports. A polished AI summary can hide where those records came from,
-when they were observed, or what is missing.
+civic reports. A polished summary can hide where a claim came from, when its
+source was observed, or what the records do not establish.
 
-Groundwork SF takes a different approach: every visible claim belongs to a
-context graph and points back to its evidence.
+Groundwork SF takes a different approach: every public-record claim carries its
+proof.
 
-The product combines a parcel map, an explorable evidence graph, source-level
-dates and diagnostics, and an AI assistant that must retrieve a bounded graph
-packet before answering site-specific questions. The model explains the
-evidence; it does not own the facts.
+Seven San Francisco public datasets compile into one typed context graph. The
+interface keeps its parcel map, evidence graph, source records, dates, and trust
+diagnostics synchronized. For site questions, the AI agent must retrieve one
+bounded, hash-verified graph packet and cite evidence inside it. The model
+explains the graph; deterministic code owns identity, joins, facts, conflicts,
+and missing-data semantics.
 
-We deployed the complete path on DigitalOcean using App Platform, Managed
+We deployed the complete path on DigitalOcean with App Platform, Managed
 PostgreSQL, Spaces, Functions, Agent Platform, a Knowledge Base backed by
-Managed OpenSearch, and Agent Evaluations.
+Managed OpenSearch, and Agent Evaluations. We verified it for the hackathon and
+tore the public deployment down after the demo window.
 
-The most important lesson was architectural, not prompt-related: trustworthy
-AI starts by deciding what the model is not allowed to own.
+The biggest lesson was architectural, not prompt-related: trustworthy AI starts
+by deciding what the model is not allowed to own.
 
-Source and architecture:
+Source, architecture, and reproducible demo:
 https://github.com/drukpa1455/ai-good-hackathon
 
-Hackathon:
+Built for AI for Social Good with MLH × DigitalOcean:
 https://ai-for-social-good-mlh.devpost.com/
 
 #AIForGood #GraphRAG #ResponsibleAI #CivicTech #DigitalOcean #OpenData
 
-## Short Version
+## Carousel
 
-We built Groundwork SF in 24 hours: a proof-carrying civic context graph for
-San Francisco community housing research.
+| Page | Point | Asset |
+| --- | --- | --- |
+| 1 | Every public-record claim carries its proof | [01-proof.png](assets/linkedin/01-proof.png) |
+| 2 | One canonical graph serves the product and Agent | [02-system.png](assets/linkedin/02-system.png) |
+| 3 | Assertions retain their evidence and diagnostics | [03-contract.png](assets/linkedin/03-contract.png) |
+| 4 | Site RAG is mandatory, bounded, and hash-verified | [04-boundary.png](assets/linkedin/04-boundary.png) |
+| 5 | DigitalOcean owns the deployed service boundaries | [05-platform.png](assets/linkedin/05-platform.png) |
 
-Every claim links to evidence, dates, and diagnostics. A DigitalOcean AI agent
-can explain a bounded graph packet, but deterministic code—not the model—owns
-identity, joins, facts, conflicts, and missing-data semantics.
+The first page embeds the canonical light-theme application design from the
+final frontend handoff. Pages 2 and 5 were reconciled with implemented code:
+the refresh lease is 20 seconds, the Function runtime is Python 3.13, and VPC
+privacy is attributed only where the architecture provides it.
 
-Our biggest lesson: trustworthy AI starts by deciding what the model is not
-allowed to own.
+## Publish checklist
 
-https://github.com/drukpa1455/ai-good-hackathon
+1. On LinkedIn, choose **Start a post → More → Add a document**.
+2. Upload the PDF and enter the title above.
+3. Preview all five pages; LinkedIn does not let you replace a document after
+   publishing.
+4. Paste the post copy and resolve `DigitalOcean` and `MLH` as organization
+   mentions when available.
+5. Publish from the intended personal profile or Page.
 
-#AIForGood #GraphRAG #ResponsibleAI #CivicTech #DigitalOcean
+LinkedIn currently accepts PDF document posts up to 100 MB and 300 pages,
+recommends PDF for quality, and requires equal page sizes. This package is a
+five-page, same-size, flattened PDF under 1 MB. See LinkedIn's
+[document-post guidance](https://www.linkedin.com/help/linkedin/answer/a518909/upload-and-share-documents-on-linkedin?lang=en).
 
-## Media Recommendation
+If document upload is unavailable, attach the five numbered PNG files in order.
+LinkedIn supports manual alt text for image posts; use each row's **Point** as
+the concise description and add the visible diagram details. See LinkedIn's
+[alt-text guidance](https://www.linkedin.com/help/linkedin/answer/a519856/adding-alternative-text-to-images-for-accessibility?lang=en).
 
-Use a native five-slide carousel or a 30–45 second silent screen recording.
-Native media should carry the story; the live application is optional and
-should not be exposed solely for the post.
+## Later tutorial post
 
-Use the canonical design renders in `docs/assets/` for static product imagery.
-Record interaction from the actual `web/` application, not the design
-prototype, and keep the `MOCK DATA` label visible.
+Follow the launch with the public implementation guide:
 
-### Carousel
-
-1. **Every public-record claim should carry its proof.** Product hero with map,
-   graph, and evidence drawer.
-2. **The problem is fragmented context.** Show the seven bounded public-data
-   categories converging on one parcel.
-3. **The graph owns the facts.** Show `Site -> Assertion -> EvidenceRecord` with
-   dates, source URL, digest, and diagnostics.
-4. **The model explains a bounded packet.** Show the Agent-to-Function path and
-   one grounded answer with citations.
-5. **Built on DigitalOcean in 24 hours.** Show the platform architecture and a
-   repository call to action.
-
-### Screen recording
-
-1. Select 300 De Haro Street.
-2. Expand its context graph.
-3. Open the evidence behind the affordable-housing assertion.
-4. Show dates, source URL, and coverage diagnostics.
-5. Ask one grounded question and display its citations.
-6. End on the architecture card and repository URL.
-
-Do not show access tokens, cloud-resource identifiers, browser bookmarks, or a
-publicly writable Agent endpoint. Use a recorded verified interaction if the
-live Agent has been made private.
-
-## Tutorial Follow-Up Post
-
-Publish this after the main project post.
-
-I wrote a technical walkthrough of the architecture behind Groundwork SF:
-evidence-first Graph RAG on DigitalOcean.
-
-The central pattern is a two-plane retrieval system:
-
-- deterministic code compiles site facts into a typed, evidence-linked graph;
-- a DigitalOcean Function gives the Agent one bounded, digest-verified packet;
-- a separate Knowledge Base supplies methodology without becoming a fact
-  source; and
-- Agent Evaluations test grounding, freshness, ambiguity, citation, refusal,
-  and prompt-injection behavior.
-
-The tutorial includes the implementation boundaries, deployment path, failure
-behavior, evaluation corpus, cost controls, and teardown.
-
-https://github.com/drukpa1455/ai-good-hackathon/blob/main/docs/writing/evidence-first-graph-rag-on-digitalocean.md
-
-#GraphRAG #AIEngineering #ResponsibleAI #DigitalOcean #TechnicalWriting
+> I wrote the implementation walkthrough behind Groundwork SF: how to compile
+> public records into a proof-carrying graph, give a DigitalOcean Agent one
+> bounded and hash-verified site packet, keep methodology in a separate
+> Knowledge Base, evaluate the Agent, and tear the public stack down safely.
+>
+> https://github.com/drukpa1455/ai-good-hackathon/blob/main/docs/writing/evidence-first-graph-rag-on-digitalocean.md
+>
+> #GraphRAG #AIEngineering #ResponsibleAI #DigitalOcean #TechnicalWriting
