@@ -1,67 +1,59 @@
-# Groundwork SF — frontend (`web/`)
+# Groundwork SF frontend
 
-Judge-ready frontend for the SF Community Site Context Graph, built against
-deterministic mock data per `docs/frontend-design-handoff.md`. Visual system:
-the Spatioterra brand kits (dark default, light toggle), Inconsolata +
-Atkinson Hyperlegible Mono.
+The archived React interface for the SF Community Site Context Graph. Every
+site, graph, map, evidence, and runtime request crosses one `ContextClient`
+boundary, backed by deterministic fixtures or the FastAPI service.
 
-## Demo (mock mode)
+## Run locally
 
-Requires Node 22 and an installed Google Chrome. The Playwright projects use
-Chrome at desktop and mobile viewports, so no separate browser bundle is
-downloaded.
+Use Node 22 and Google Chrome:
 
 ```bash
 npm --prefix web ci
 VITE_DATA_MODE=mock npm --prefix web run dev
-# open http://localhost:5173/  → redirects to /sites/3956008
 ```
 
-Deterministic UI states (select once per page load):
+Open <http://localhost:5173/sites/3956008>.
 
-```
+Mock states are selected once per page load:
+
+```text
 /sites/3956008?mockState=ready|loading|empty|error|stale|conflict|chat-offline
 ```
 
-Deep links: `/sites/:parcelId?focus=housing`, `/evidence/:evidenceId`.
+Deep links use `/sites/:parcelId?focus=housing` and
+`/evidence/:evidenceId`.
 
-## Verification
+## Verify
 
 ```bash
-npm --prefix web ci
 npm --prefix web run lint
 npm --prefix web run typecheck
 npm --prefix web test -- --run
 npm --prefix web run build
-npm --prefix web run e2e     # also writes screenshots to tmp/frontend-handoff/
+npm --prefix web run e2e
 ```
 
-## Boundaries kept
+Playwright writes disposable review images under `tmp/frontend-handoff/`.
 
-- All data access goes through `ContextClient` (`src/data/client.ts`); the
-  mock/HTTP choice happens once from `VITE_DATA_MODE`. Components never import
-  fixtures or inspect the mode; only `mock-client.ts` reads `?mockState=`.
-- `src/contracts.ts` owns the frozen public types plus their boundary-validation
-  helpers. Backend integration preserves these shapes.
-- Graph edges derive from entity-object assertions — no duplicate edges array.
-- The theme-aware CARTO/OSM raster endpoints live in one module:
-  `src/map/tiles.ts` (`dark_all`/`light_all` plus required dual attribution;
-  tiles-failed fallback keeps the parcel on a neutral canvas).
-- `AgentWidget.tsx` injects DigitalOcean's generated widget script and owns only
-  the bounded loading state, shared `data-logo`, and compact outer-frame sizing.
-  The visible provider iframe remains the launcher and owns chat rendering and
-  transport; there is no custom transcript, composer, or proxy.
-- No DataSF calls, no source-join logic, no legal/safety/valuation/suitability
-  conclusions. Mock releases always render the `MOCK DATA` badge.
+## Boundaries
 
-## Backend integration
+- `src/data/` chooses mock or HTTP transport once. Components never import
+  fixtures, call DataSF, or inspect provider credentials.
+- `src/contracts.ts` and the backend contracts remain compatible. Graph edges
+  derive from entity-object assertions; there is no duplicate edge store.
+- `src/map/tiles.ts` owns theme-aware raster sources, attribution, and the
+  neutral-canvas failure path.
+- `AgentWidget.tsx` injects DigitalOcean's generated widget. The provider owns
+  chat rendering and transport; Groundwork owns only configuration, bounded
+  loading, origin checks, and layout.
+- Mock releases always show `MOCK DATA`. The interface makes no legal, safety,
+  valuation, or suitability conclusions.
 
-1. Implement the four `ContextClient` routes without changing component props.
-2. Run the suites once with `VITE_DATA_MODE=mock` and once with `api`.
-3. Keep mock mode for deterministic tests and design review.
+## API-mode browser suite
 
-For the API-mode browser suite, build the frontend with
-`VITE_DATA_MODE=api`, start the FastAPI service on port 8000, then run:
+Build the frontend with `VITE_DATA_MODE=api`, start FastAPI on port 8000, then
+run:
 
 ```bash
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:8000 \

@@ -59,6 +59,10 @@ Use a native five-slide carousel or a 30–45 second silent screen recording.
 Native media should carry the story; the live application is optional and
 should not be exposed solely for the post.
 
+Use the canonical design renders in `docs/assets/` for static product imagery.
+Record interaction from the actual `web/` application, not the design
+prototype, and keep the `MOCK DATA` label visible.
+
 ### Carousel
 
 1. **Every public-record claim should carry its proof.** Product hero with map,
