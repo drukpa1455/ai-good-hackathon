@@ -1,8 +1,8 @@
 # Groundwork SF LinkedIn Package
 
-This package promotes the already-public hackathon project without publishing
-the unpublished DigitalOcean tutorial. Do not paste tutorial sections into the
-post or link to the private draft branch.
+This package promotes the public hackathon project and its technical-writing
+collection. Link to tracked public pieces; never link to private branches or
+imply official DigitalOcean publication.
 
 ## Recommended Launch Post
 
@@ -91,8 +91,7 @@ live Agent has been made private.
 
 ## Tutorial Follow-Up Post
 
-Publish this only after DigitalOcean publishes the tutorial or releases it for
-publication elsewhere.
+Publish this after the main project post.
 
 I wrote a technical walkthrough of the architecture behind Groundwork SF:
 evidence-first Graph RAG on DigitalOcean.
@@ -109,6 +108,6 @@ The central pattern is a two-plane retrieval system:
 The tutorial includes the implementation boundaries, deployment path, failure
 behavior, evaluation corpus, cost controls, and teardown.
 
-<published_tutorial_url>
+https://github.com/drukpa1455/ai-good-hackathon/blob/main/docs/writing/evidence-first-graph-rag-on-digitalocean.md
 
 #GraphRAG #AIEngineering #ResponsibleAI #DigitalOcean #TechnicalWriting

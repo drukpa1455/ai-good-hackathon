@@ -25,6 +25,9 @@ Work from current `origin/main`. Read these files completely before designing:
 - `docs/deck-review.md` — corrections and refinements for the presentation
 - `docs/frontend-design-handoff.md` — Groundwork product semantics and visual
   background
+- `docs/writing/README.md` — publication states and future writing roadmap
+- `docs/writing/evidence-first-graph-rag-on-digitalocean.md` — public tutorial
+- `docs/writing/groundwork-digitalocean-case-study.md` — public case study
 
 Study these local inputs:
 
@@ -197,28 +200,36 @@ Use this story sequence:
 5. DigitalOcean supplies the complete deployed path;
 6. a grounded interaction demonstrates successful retrieval;
 7. an ambiguous interaction demonstrates fail-closed behavior; and
-8. the close points to the repository and eventual tutorial.
+8. the close points to the repository and public technical writing.
 
 ## Writing — `/writing/`
 
-Add one content-driven card:
+Add two content-driven cards:
 
 ```json
-{
-  "slug": "evidence-first-graph-rag-digitalocean",
-  "title": "How To Build Evidence-First Graph RAG on DigitalOcean",
-  "summary": "A two-plane architecture for typed facts, methodology retrieval, and bounded model explanation.",
-  "status": "editorial-review",
-  "published_at": null,
-  "canonical_url": null
-}
+[
+  {
+    "slug": "evidence-first-graph-rag-digitalocean",
+    "title": "How To Build Evidence-First Graph RAG on DigitalOcean",
+    "summary": "A two-plane architecture for typed facts, methodology retrieval, and bounded model explanation.",
+    "status": "public-reference",
+    "published_at": "2026-07-12",
+    "source": "docs/writing/evidence-first-graph-rag-on-digitalocean.md"
+  },
+  {
+    "slug": "groundwork-digitalocean-24-hours",
+    "title": "What We Learned Building an Evidence-First Civic AI Agent in 24 Hours",
+    "summary": "Why facts, retrieval, model explanation, evaluation, and teardown need separate owners.",
+    "status": "public-reference",
+    "published_at": "2026-07-12",
+    "source": "docs/writing/groundwork-digitalocean-case-study.md"
+  }
+]
 ```
 
-Render it as **Technical walkthrough in editorial review** with no article
-link. The full manuscript is deliberately absent from the public repository to
-preserve original, first-run DigitalOcean eligibility. Do not reconstruct,
-quote extensively, expose, or bundle it. Only a later `published` state with a
-canonical URL may create a link.
+Render both from their tracked Markdown sources and label them as public
+references. Do not imply DigitalOcean authorship, endorsement, or official
+publication.
 
 ## LinkedIn and media assets
 
@@ -272,7 +283,8 @@ shell as the portfolio shell.
 - The presentation works through keyboard, touch, scrolling, overview, and
   printing.
 - The DigitalOcean architecture is prominent and technically accurate.
-- The unpublished tutorial cannot be reached or extracted.
+- The writing index exposes exactly the two public pieces and their publication
+  states.
 - Removing the optional live-app link leaves no broken layout.
 - The editorial pages have no runtime API calls, analytics, secrets, or
   backend. Only the archived app's attributed map tiles may use the network.

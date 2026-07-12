@@ -221,14 +221,23 @@ cataloged in [docs/sources.md](docs/sources.md).
 | [`ops/digitalocean-demo-lease.md`](ops/digitalocean-demo-lease.md) | Deployment, verification, spend, exposure, and teardown contract |
 | [`docs/devpost.md`](docs/devpost.md) | Submitted project story and demo script |
 | [`docs/frontend-design-handoff.md`](docs/frontend-design-handoff.md) | Product, interaction, evidence, and visual contract |
+| [`docs/writing/`](docs/writing/) | Public tutorial, case study, and focused follow-up proposals |
 | [`docs/hackathon-studio-design-agent-prompt.md`](docs/hackathon-studio-design-agent-prompt.md) | Canonical static archive, app, presentation, and writing handoff |
+
+## Technical writing
+
+Read the public
+[evidence-first Graph RAG tutorial](docs/writing/evidence-first-graph-rag-on-digitalocean.md),
+the shorter [24-hour engineering case study](docs/writing/groundwork-digitalocean-case-study.md),
+and the [code-backed roadmap for future DigitalOcean pieces](docs/writing/README.md).
 
 ## Project status
 
 Groundwork SF is an archived hackathon build and teaching example. The former
 cloud deployment is gone; the repository and deterministic demo remain active.
-The DigitalOcean Community tutorial is deliberately kept outside the public
-branch while first-publication eligibility is being evaluated.
+The technical writing is public. Any future DigitalOcean Community submission
+must be a new, original manuscript rather than a copy of these repository
+pieces.
 
 The Devpost copy records what was demonstrated at submission time. Current
 operational truth lives in this README and the teardown record in
