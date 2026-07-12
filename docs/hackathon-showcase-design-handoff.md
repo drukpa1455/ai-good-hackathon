@@ -1,11 +1,13 @@
 # Design Handoff: Hackathon Studio and Groundwork SF Story
 
-Status: Ready for static design prototype
+Status: Ready for design and static implementation
 
 Audience: Design/frontend agent working independently from the Groundwork
 product application
 
 Source repository: <https://github.com/drukpa1455/ai-good-hackathon>
+
+Fresh-session prompt: `docs/hackathon-studio-design-agent-prompt.md`
 
 This handoff is public-safe. The DigitalOcean tutorial manuscript remains
 outside the public repository. Do not add, bundle, or deploy that manuscript
@@ -93,11 +95,13 @@ hackathon-studio/
   README.md
 ```
 
-Plain semantic HTML, CSS, and minimal JavaScript are sufficient for the first
-version. Do not introduce a framework, CMS, database, authentication layer, or
-client-side router unless a second project proves that static composition is
-no longer adequate. Repeated cards may be generated at build time later; they
-do not justify a runtime dependency now.
+Plain semantic HTML, CSS, and minimal JavaScript are sufficient for the
+editorial shell, project story, writing index, and presentation. The archived
+Groundwork application remains its existing React/Vite build. Do not introduce
+a framework, CMS, database, authentication layer, or client-side router for the
+editorial shell unless a second project proves that static composition is no
+longer adequate. Repeated cards may be generated at build time later; they do
+not justify a runtime dependency now.
 
 For this task, create only a local prototype under a disposable working
 directory. Do not initialize or publish the new repository.
@@ -374,7 +378,9 @@ for every meaningful image.
 - The DigitalOcean architecture is prominent but not promotional filler.
 - The tutorial cannot be reached, extracted, or accidentally bundled.
 - The live demo can be removed without leaving a broken layout.
-- All primary content works without JavaScript.
+- The home, project story, writing index, and presentation remain readable
+  without JavaScript. The explicitly labeled interactive app archive requires
+  its existing JavaScript bundle.
 - The editorial prototype has no network calls, secrets, analytics, forms, or
   backend. The archived app may request only its attributed map tiles.
 - Desktop and mobile screenshots are ready for review.
