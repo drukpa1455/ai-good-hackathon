@@ -7,9 +7,9 @@ product application
 
 Source repository: <https://github.com/drukpa1455/ai-good-hackathon>
 
-Working branch content is unpublished. Do not push, deploy, or make the
-DigitalOcean tutorial publicly accessible without explicit publication
-approval.
+This handoff is public-safe. The DigitalOcean tutorial manuscript remains
+outside the public repository. Do not add, bundle, or deploy that manuscript
+without explicit publication approval.
 
 ## Mission
 
@@ -31,15 +31,18 @@ Groundwork API.
 
 ## Publication Boundary
 
-The Groundwork project and Devpost story are already public. The draft article
-`docs/digitalocean-technical-post.md` is not public and is being reserved for a
-possible original, first-run DigitalOcean Community publication.
+The Groundwork project and Devpost story are already public. The draft
+DigitalOcean article is maintained outside the public repository and is being
+reserved for a possible original, first-run DigitalOcean Community
+publication.
 
 The design may use:
 
 - public copy from `README.md` and `docs/devpost.md`;
 - the launch copy in `docs/linkedin-post.md`;
 - architecture already documented publicly in `docs/architecture.md`;
+- the presentation review in `docs/deck-review.md` and the local source deck at
+  `/Users/drk/Downloads/Groundwork Deck.pdf`;
 - screenshots and recorded demonstrations cleared for public use; and
 - links to the public repository and hackathon.
 
@@ -71,6 +74,8 @@ hackathon-studio/
   projects/
     groundwork-sf/
       index.html
+      presentation/
+        index.html
   writing/
     index.html
   assets/
@@ -129,6 +134,42 @@ The page should read as a visual engineering case study:
 8. **Build details:** technology and tests, subordinate to the system story.
 9. **Links:** repository, Devpost event, optional recorded demo, and tutorial
    state.
+
+### Presentation — `/projects/groundwork-sf/presentation/`
+
+Translate the Groundwork deck into a first-class HTML presentation rather than
+embedding a PDF viewer. Study `/Users/drk/Downloads/Groundwork Deck.pdf` and
+`docs/deck-review.md`, preserving the deck's strongest visual sequence while
+correcting any claims identified by the review.
+
+The HTML presentation must:
+
+- provide one semantic section per slide with stable fragment IDs;
+- support arrow keys, Page Up/Page Down, Home/End, touch controls, and visible
+  previous/next buttons;
+- allow a reader to scroll through the complete story without JavaScript;
+- include an overview or slide-index mode;
+- keep diagrams and essential text as HTML or SVG rather than flattened text
+  inside screenshots;
+- expose speaker notes only through an explicit presenter mode;
+- print cleanly to PDF with one slide per page;
+- link back to the Groundwork project story and repository; and
+- avoid loading the live application or Agent inside an iframe.
+
+Use the original PDF as a private design reference. A downloadable PDF may be
+added later only after corrected slides are exported from the same canonical
+HTML content. Do not maintain independent HTML and PDF versions of the deck.
+
+The presentation story should follow this sequence:
+
+1. fragmented public records create an evidence problem;
+2. every claim should carry its proof;
+3. the product joins map, context graph, evidence, and diagnostics;
+4. deterministic graph facts remain separate from model explanation;
+5. DigitalOcean supplies the complete deployed path;
+6. one grounded interaction demonstrates the successful boundary;
+7. one ambiguous interaction demonstrates fail-closed behavior; and
+8. the close invites readers to inspect the repository and eventual tutorial.
 
 ### Writing — `/writing/`
 
@@ -247,6 +288,7 @@ publication requires:
 6. `groundwork-demo.mp4` — optional 30–45 second muted recording.
 7. `groundwork-social-1200x627.png` — LinkedIn link-preview image.
 8. `groundwork-square-1080.png` — first carousel slide or project card.
+9. `groundwork-presentation-poster.webp` — presentation route preview.
 
 All screenshots must use public demo records, hide credentials and cloud
 identifiers, and remain understandable with adjacent captions. Provide alt text
@@ -270,6 +312,9 @@ for every meaningful image.
   tutorial card.
 - The Groundwork story is understandable without opening the repository or
   live application.
+- The HTML presentation works by keyboard, touch, scrolling, and printing.
+- The presentation and project story share one source for repeated facts,
+  links, and architecture labels.
 - The DigitalOcean architecture is prominent but not promotional filler.
 - The tutorial cannot be reached, extracted, or accidentally bundled.
 - The live demo can be removed without leaving a broken layout.
