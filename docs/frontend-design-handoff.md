@@ -1,17 +1,16 @@
 # Frontend Design Handoff: SF Community Site Context Graph
 
-Status: Ready for frontend implementation
+Status: Archived design contract; `web/` and its tests own current behavior
 
-Audience: Design/frontend agent working independently from the backend and
-data-graph work
+Audience: Contributors preserving or extending the frontend
 
 Repository: <https://github.com/drukpa1455/ai-good-hackathon>
 
 ## Mission
 
-Build the complete judge-facing frontend against deterministic mock data. The
-result must be polished enough to demo before the real API, PostgreSQL graph,
-DigitalOcean Knowledge Base, or agent exists.
+This brief defined the judge-facing frontend against deterministic mock data so
+design and implementation could proceed before the API and cloud stack were
+ready. The completed frontend preserves that mock boundary alongside API mode.
 
 The experience helps community land trusts, affordable-housing organizations,
 and neighborhood nonprofits understand the official public-record context around
@@ -666,7 +665,7 @@ Suggested questions:
 
 ## Acceptance Evidence
 
-The frontend handoff is complete when:
+The implementation preserves this handoff when:
 
 - all three routes and sites work entirely in mock mode
 - map, graph, evidence, trust, and URL selection stay synchronized
@@ -692,28 +691,20 @@ npm --prefix web run build
 npm --prefix web run e2e
 ```
 
-## Backend Integration Handoff
+## Integration Contract
 
-When the backend OpenAPI document is ready:
+The frontend and FastAPI backend are integrated through `ContextClient` and
+compatible typed contracts. Preserve that boundary:
 
-1. Generate `web/src/contracts.generated.ts` with `openapi-typescript`.
-2. Compare generated shapes with this frozen contract and resolve differences at
-   the API boundary.
-3. Change `ContextClient` imports to generated types without changing component
-   props or state ownership.
-4. Run the same component and Playwright suite once with `VITE_DATA_MODE=mock`
-   and once with `VITE_DATA_MODE=api`.
-5. Keep mock mode for deterministic tests and design review.
-6. Keep the mock badge whenever `release.mock=true`; do not delete the
-   fixtures.
+1. Reconcile contract changes in both frontend and backend owners.
+2. Keep component props independent of mock versus HTTP transport.
+3. Run browser coverage in both modes when routing, contracts, or runtime
+   configuration changes.
+4. Keep deterministic fixtures for tests and design review.
+5. Keep the mock badge whenever `release.mock=true`.
 
-The frontend agent should hand back:
-
-- the complete `web/` implementation
-- desktop and mobile screenshots under `tmp/frontend-handoff/`
-- the exact mock-mode demo command
-- a short list of any contract mismatch discovered
-- no backend, data-source, cloud, or agent-platform changes
+Disposable screenshots belong under `tmp/frontend-handoff/`; they are review
+artifacts, not committed product sources.
 
 ## Open Decisions
 

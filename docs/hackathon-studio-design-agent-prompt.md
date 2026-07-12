@@ -43,6 +43,11 @@ The `.dc.html` file in the ZIP is a design reference, not the shippable
 application. The real application is the React/TypeScript/Vite project in
 `web/`.
 
+The two hero images under `docs/assets/` are canonical renders from that design
+reference. They may be used for static editorial presentation, but any
+interactive archive or screen recording must come from `web/` and retain its
+visible mock-data labeling.
+
 ## Working boundary
 
 Create the local prototype at:

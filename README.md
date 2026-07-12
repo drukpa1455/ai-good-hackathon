@@ -13,7 +13,9 @@ unknown.
 ![Python](https://img.shields.io/badge/Python-3.13-3776ab)
 ![Node](https://img.shields.io/badge/Node-22-339933)
 
-![Groundwork SF showing a parcel map, evidence graph, public-record entities, and deterministic trust diagnostics](docs/assets/groundwork-overview.png)
+![Final Groundwork SF interface design showing a parcel map, evidence graph, public-record entities, and deterministic trust diagnostics](docs/assets/groundwork-overview.png)
+
+*Final interface design rendered from the canonical interactive prototype.*
 
 ## What we built in 24 hours
 
@@ -50,7 +52,9 @@ Choose a site and Groundwork keeps four views synchronized:
 4. **Trust** — deterministic citation coverage, freshness warnings, conflicts,
    coverage gaps, and proximity-only evidence.
 
-![Groundwork SF evidence drawer showing the source record, observed and source dates, selected fields, digest, and supported assertions](docs/assets/groundwork-evidence.png)
+![Final Groundwork SF evidence-drawer design showing the source record, observed and source dates, selected fields, digest, and supported assertions](docs/assets/groundwork-evidence.png)
+
+*Canonical evidence design; the typed contract owns the underlying semantics.*
 
 An absent record never silently becomes a negative claim. A nearby event never
 becomes a parcel fact. Historical, stale, conflicting, missing, and
@@ -216,6 +220,7 @@ cataloged in [docs/sources.md](docs/sources.md).
 | [`.do/app.yaml`](.do/app.yaml) | Reproducible App Platform baseline |
 | [`ops/digitalocean-demo-lease.md`](ops/digitalocean-demo-lease.md) | Deployment, verification, spend, exposure, and teardown contract |
 | [`docs/devpost.md`](docs/devpost.md) | Submitted project story and demo script |
+| [`docs/frontend-design-handoff.md`](docs/frontend-design-handoff.md) | Product, interaction, evidence, and visual contract |
 | [`docs/hackathon-studio-design-agent-prompt.md`](docs/hackathon-studio-design-agent-prompt.md) | Canonical static archive, app, presentation, and writing handoff |
 
 ## Project status
