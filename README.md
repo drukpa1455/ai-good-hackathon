@@ -22,7 +22,11 @@ See the [current architecture](docs/architecture.md) for the implemented system,
 links collected at the kickoff, and the
 [frontend design handoff](docs/frontend-design-handoff.md) for the product
 contract. The [Devpost submission](docs/devpost.md) preserves the public project
-story and demo script.
+story and demo script. The
+[Hackathon Studio handoff](docs/hackathon-showcase-design-handoff.md) and its
+[copy-paste design-agent prompt](docs/hackathon-studio-design-agent-prompt.md)
+define the publication-safe project archive, interactive mock app, HTML
+presentation, and writing index.
 
 ## Local demo
 
