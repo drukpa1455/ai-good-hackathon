@@ -46,6 +46,11 @@ test.describe('90-second demo flow', () => {
     await expect(page).toHaveURL(/ev=ev-6jgi-cpb4-3956008/);
 
     if (testInfo.project.name === 'desktop') {
+      await drawer.evaluate(async (element) => {
+        await Promise.all(
+          element.getAnimations({ subtree: true }).map((animation) => animation.finished),
+        );
+      });
       await page.screenshot({ path: path.join(SHOTS, 'desktop-evidence-drawer.png') });
     }
 
