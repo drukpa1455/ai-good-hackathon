@@ -19,7 +19,6 @@ Work from current `origin/main`. Read these files completely before designing:
 
 - `AGENTS.md`
 - `README.md`
-- `docs/hackathon-showcase-design-handoff.md` — detailed source of truth
 - `docs/linkedin-post.md` — public launch copy and media storyboard
 - `docs/devpost.md` — public product story and demo script
 - `docs/architecture.md` — implemented system architecture
@@ -51,9 +50,9 @@ Create the local prototype at:
 `/Users/drk/src/hackathon-studio`
 
 Do not publish it, initialize a public repository, configure a custom domain,
-or create cloud resources. Do not change or deploy the live Groundwork system.
-Do not make its Agent public. Use local content, bundled mock data, screenshots,
-and recorded interactions.
+or create cloud resources. The Groundwork cloud deployment has been torn down;
+do not recreate it or make an Agent public. Use local content, bundled mock
+data, screenshots, and recorded interactions.
 
 If a repeatable archive build requires changes to the Groundwork repository,
 do not edit its root directly. Create a focused issue, branch, and `.worktrees/`
@@ -124,10 +123,9 @@ Primary public links:
 
 - Repository: <https://github.com/drukpa1455/ai-good-hackathon>
 - Hackathon: <https://ai-for-social-good-mlh.devpost.com/>
-- Live app: <https://groundwork-sf-demo-iule6.ondigitalocean.app>
 
-Treat the live-app link as optional. Render it only when explicitly enabled in
-content. The durable project story must remain complete when it is absent.
+The former live app was permanently torn down after the event. Do not render a
+dead live-app link; use the archived interactive demo instead.
 
 ## Actual application archive — `/projects/groundwork-sf/explore/`
 

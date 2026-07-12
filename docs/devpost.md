@@ -4,9 +4,9 @@ Submitted July 11, 2026 to
 [AI for Social Good: Hack with MLH & DigitalOcean](https://ai-for-social-good-mlh.devpost.com/).
 
 This document preserves the public project copy and demo script. It is a
-submission artifact, not the operational source of truth; current
-implementation and deployment status remain owned by the repository README and
-the deployed application's health response.
+submission artifact, not the operational source of truth. The live demonstration
+was torn down after the event; current implementation and cloud status are owned
+by the repository README and `ops/digitalocean-demo-lease.md`.
 
 ## Project overview
 
@@ -247,7 +247,7 @@ and axe-core.
 ## Links
 
 - [Source code](https://github.com/drukpa1455/ai-good-hackathon)
-- [Live demo](https://groundwork-sf-demo-iule6.ondigitalocean.app)
+- Live demo: archived after the event; run the deterministic demo from source
 - [Hackathon](https://ai-for-social-good-mlh.devpost.com/)
 
 ## Prize categories
