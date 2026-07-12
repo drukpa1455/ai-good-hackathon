@@ -23,7 +23,8 @@ should help a visitor understand four things quickly:
 1. what was built;
 2. why it matters;
 3. how the system works; and
-4. where to explore the code, demo media, and eventual tutorial.
+4. where to explore the archived application, code, presentation, and eventual
+   tutorial.
 
 The first prototype must work entirely from local content and media. It must
 not require a live Agent, DigitalOcean credentials, a database, or the
@@ -74,6 +75,8 @@ hackathon-studio/
   projects/
     groundwork-sf/
       index.html
+      explore/
+        index.html
       presentation/
         index.html
   writing/
@@ -134,6 +137,53 @@ The page should read as a visual engineering case study:
 8. **Build details:** technology and tests, subordinate to the system story.
 9. **Links:** repository, Devpost event, optional recorded demo, and tutorial
    state.
+
+### Archived application — `/projects/groundwork-sf/explore/`
+
+Host the actual Groundwork frontend as a durable, interactive mock-data
+artifact. The Claude Design export is not the application:
+
+- `/Users/drk/Downloads/SF Community Site Context Graph.zip` contains
+  `Groundwork SF.dc.html`, `support.js`, and prototype fixtures. Its own README
+  identifies these files as the design reference and says not to ship them.
+- The implemented application is the React, TypeScript, and Vite project under
+  this repository's `web/` directory. It was recreated from that design and is
+  the product artifact to archive.
+
+The application is authored as components rather than one handwritten HTML
+file, but `VITE_DATA_MODE=mock npm --prefix web run build` compiles it into
+static HTML, JavaScript, CSS, and bundled fixtures. It therefore can be hosted
+without FastAPI, PostgreSQL, Spaces, DataSF queries, or a public Agent.
+
+Do not copy the current `web/dist` directory or commit generated output to this
+repository. The implementation agent should create a repeatable archive build
+that:
+
+- builds from the tagged Groundwork source revision in mock mode;
+- configures Vite's base path for `/projects/groundwork-sf/explore/`;
+- configures the router basename or uses an equivalent static-host-safe route
+  strategy;
+- makes direct visits and refreshes of site and evidence routes resolve to the
+  application shell;
+- preserves the three bundled demo sites and visible mock-data labeling;
+- leaves the Agent unavailable because the mock runtime configuration contains
+  no script URL, Agent ID, or chatbot ID;
+- does not call the Groundwork API or any DigitalOcean resource;
+- records the source repository, tag, and commit in visible archive metadata;
+- excludes source maps, credentials, cloud identifiers, and runtime secrets;
+  and
+- links back to the project story, presentation, and source repository.
+
+The current map uses external raster tiles with OpenStreetMap and CARTO
+attribution. Treat that as the archive's only allowed runtime network
+dependency, document it clearly, and preserve attribution. If a fully offline
+archive becomes necessary, replace the interactive basemap with an explicitly
+labeled static map image rather than copying or vendoring third-party tiles.
+
+Keep the archived app visually distinct from the editorial shell: add a slim
+archive banner outside or above the application stating **Interactive archived
+demo · bundled mock data · no live AI**. Do not redesign or reimplement the
+Groundwork interface inside the portfolio project.
 
 ### Presentation — `/projects/groundwork-sf/presentation/`
 
@@ -289,6 +339,7 @@ publication requires:
 7. `groundwork-social-1200x627.png` — LinkedIn link-preview image.
 8. `groundwork-square-1080.png` — first carousel slide or project card.
 9. `groundwork-presentation-poster.webp` — presentation route preview.
+10. `groundwork-explore-poster.webp` — archived application route preview.
 
 All screenshots must use public demo records, hide credentials and cloud
 identifiers, and remain understandable with adjacent captions. Provide alt text
@@ -312,6 +363,11 @@ for every meaningful image.
   tutorial card.
 - The Groundwork story is understandable without opening the repository or
   live application.
+- The archived application is built from `web/`, not from the Claude `.dc.html`
+  design reference.
+- The archived application works from bundled mock data without the Groundwork
+  backend, DigitalOcean resources, or a public Agent.
+- Direct visits to archived site and evidence routes work on the static host.
 - The HTML presentation works by keyboard, touch, scrolling, and printing.
 - The presentation and project story share one source for repeated facts,
   links, and architecture labels.
@@ -319,7 +375,8 @@ for every meaningful image.
 - The tutorial cannot be reached, extracted, or accidentally bundled.
 - The live demo can be removed without leaving a broken layout.
 - All primary content works without JavaScript.
-- The prototype has no network calls, secrets, analytics, forms, or backend.
+- The editorial prototype has no network calls, secrets, analytics, forms, or
+  backend. The archived app may request only its attributed map tiles.
 - Desktop and mobile screenshots are ready for review.
 - The design agent returns a file manifest, design rationale, and notes on any
   content or asset gaps rather than publishing the site.
