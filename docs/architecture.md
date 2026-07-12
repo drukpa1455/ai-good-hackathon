@@ -1,9 +1,9 @@
 # Groundwork SF current architecture
 
-This document describes the implemented hackathon system. Historical delivery
-plans explain how it was built; this file owns the concise current-state map.
-Runtime state is dynamic, so `/healthz` and `/api/data-status` remain the
-authoritative deployment and data-status readbacks.
+This document describes the implemented hackathon system and owns its concise
+technical map. The event deployment has been torn down. During any future
+approved deployment, `/healthz` and `/api/data-status` are the authoritative
+revision and data-state readbacks.
 
 Presentation claims derived from this architecture are reconciled in the
 [deck alignment review](deck-review.md).

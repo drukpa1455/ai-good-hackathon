@@ -1,7 +1,8 @@
 # Groundwork deck alignment
 
 This review compares `Groundwork Deck.pdf` with the implemented system and the
-current DigitalOcean deployment. The deck is visually strong: its hierarchy,
+event DigitalOcean deployment, which has since been torn down. The deck is
+visually strong: its hierarchy,
 dark palette, diagrams, and product screenshots already feel presentation
 ready. The highest-value work is correcting a few claims and making
 DigitalOcean's role visible earlier and more precisely.
