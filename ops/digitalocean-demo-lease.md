@@ -212,6 +212,31 @@ Before revoking the operator credential, record final App/Function/Agent
 inventory and billing/cost readback. If any create or delete result is
 ambiguous, inventory first; never retry an unknown-success mutation blindly.
 
+## Final demo teardown
+
+The approved hackathon deployment was permanently torn down at
+`2026-07-12T01:58:45Z` after its public demonstration window. Final readback
+confirmed removal of:
+
+- both Groundwork Agents and their endpoint deployments;
+- the methodology Knowledge Base;
+- the Groundwork Functions namespace;
+- the App Platform app and its deployments;
+- the Groundwork PostgreSQL and Managed OpenSearch clusters;
+- both Groundwork Spaces buckets and all contained objects; and
+- the application and temporary teardown Spaces keys.
+
+The former App endpoint no longer resolves, both former bucket endpoints return
+`404`, and the project inventory contains no Groundwork resources. Unrelated
+resources in other projects and a pre-existing volume in the default project
+were explicitly preserved.
+
+Deleting the final bucket ends the Spaces subscription and stops further
+Spaces billing according to DigitalOcean's
+[Spaces destruction documentation](https://docs.digitalocean.com/products/spaces/how-to/destroy/).
+The Devpost document remains historical submission copy and does not represent
+current cloud state.
+
 ## Sources
 
 - [App specification](https://docs.digitalocean.com/products/app-platform/reference/app-spec/)

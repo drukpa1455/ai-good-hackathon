@@ -4,17 +4,17 @@ Public concept and build workspace for **AI for Social Good: Hack with MLH & Dig
 
 ## Status
 
-Groundwork SF is deployed on DigitalOcean App Platform. Its three featured
-sites are compiled from bounded live DataSF queries, persisted in Managed
-PostgreSQL, and backed by immutable private Spaces artifacts. The verified
-fixture release remains the explicit fallback when live acquisition is
-disabled or unavailable.
+Groundwork SF was deployed on DigitalOcean for the hackathon and was torn down
+after the demonstration on July 11, 2026. No public App or Agent is currently
+running. The repository preserves the tested application, deterministic demo
+release, cloud configuration, and deployment runbook; the Hackathon Studio
+handoff defines the durable static archive.
 
 The current lead is an independently branded San Francisco community site
 context graph. Deterministic code owns graph facts, evidence identity, dates,
-and limits; a DigitalOcean agent will explain a bounded graph packet without
-becoming the source of facts or making legal, safety, valuation, or buy/sell
-claims.
+and limits; the DigitalOcean agent architecture explains a bounded graph packet
+without becoming the source of facts or making legal, safety, valuation, or
+buy/sell claims.
 
 See the [current architecture](docs/architecture.md) for the implemented system,
 [deck alignment review](docs/deck-review.md) for presentation corrections,
