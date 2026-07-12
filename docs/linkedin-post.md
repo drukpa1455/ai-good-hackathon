@@ -6,45 +6,35 @@ repository and deterministic demo remain public.
 ## Upload
 
 - **Document:** [groundwork-sf-carousel.pdf](assets/linkedin/groundwork-sf-carousel.pdf)
-- **LinkedIn title:** `Groundwork SF — Evidence-First Civic AI`
+- **LinkedIn title:** `Groundwork SF`
 - **Post copy:** use the text below verbatim, then replace the organization
   names with LinkedIn mentions if the composer resolves them.
 
 ## Post copy
 
-We built Groundwork SF in 24 hours to answer one question:
+We built Groundwork SF in 24 hours because public data should be easier to use
+without becoming easier to misrepresent.
 
-Can AI make public data easier to use without making it easier to
-misrepresent?
-
-Community housing research often means reconciling parcels, development
+Community housing teams often have to piece together parcels, development
 projects, permits, assessor history, housing programs, hazard maps, and nearby
-civic reports. A polished summary can hide where a claim came from, when its
-source was observed, or what the records do not establish.
+civic reports. A polished AI summary can hide where those records came from,
+when they were observed, or what is missing.
 
-Groundwork SF takes a different approach: every public-record claim carries its
-proof.
+Groundwork SF takes a different approach: every visible claim belongs to a
+context graph and points back to its evidence. A parcel map, an explorable
+evidence graph, source-level dates and diagnostics, and an AI assistant that
+must retrieve a bounded graph packet before answering. The model explains the
+evidence; it does not own the facts.
 
-Seven San Francisco public datasets compile into one typed context graph. The
-interface keeps its parcel map, evidence graph, source records, dates, and trust
-diagnostics synchronized. For site questions, the AI agent must retrieve one
-bounded, hash-verified graph packet and cite evidence inside it. The model
-explains the graph; deterministic code owns identity, joins, facts, conflicts,
-and missing-data semantics.
-
-We deployed the complete path on DigitalOcean with App Platform, Managed
+We deployed the complete path on DigitalOcean: App Platform, Managed
 PostgreSQL, Spaces, Functions, Agent Platform, a Knowledge Base backed by
-Managed OpenSearch, and Agent Evaluations. We verified it for the hackathon and
-tore the public deployment down after the demo window.
+Managed OpenSearch, and Agent Evaluations.
 
-The biggest lesson was architectural, not prompt-related: trustworthy AI starts
-by deciding what the model is not allowed to own.
+The most important lesson was architectural, not prompt-related: trustworthy
+AI starts by deciding what the model is not allowed to own.
 
-Source, architecture, and reproducible demo:
-https://github.com/drukpa1455/ai-good-hackathon
-
-Built for AI for Social Good with MLH × DigitalOcean:
-https://ai-for-social-good-mlh.devpost.com/
+The public demo is now archived. Curious about the architecture? Send me a
+message — happy to walk through it.
 
 #AIForGood #GraphRAG #ResponsibleAI #CivicTech #DigitalOcean #OpenData
 
@@ -56,12 +46,14 @@ https://ai-for-social-good-mlh.devpost.com/
 | 2 | One canonical graph serves the product and Agent | [02-system.png](assets/linkedin/02-system.png) |
 | 3 | Assertions retain their evidence and diagnostics | [03-contract.png](assets/linkedin/03-contract.png) |
 | 4 | Site RAG is mandatory, bounded, and hash-verified | [04-boundary.png](assets/linkedin/04-boundary.png) |
-| 5 | DigitalOcean owns the deployed service boundaries | [05-platform.png](assets/linkedin/05-platform.png) |
+| 5 | DigitalOcean stack, verified bounds, and a direct-message CTA | [05-platform.png](assets/linkedin/05-platform.png) |
 
 The first page embeds the canonical light-theme application design from the
 final frontend handoff. Pages 2 and 5 were reconciled with implemented code:
 the refresh lease is 20 seconds, the Function runtime is Python 3.13, and VPC
-privacy is attributed only where the architecture provides it.
+privacy is attributed only where the architecture provides it. The final page
+uses the latest design handoff's direct-message CTA; the launch document and
+post intentionally contain no public repository link.
 
 ## Publish checklist
 
